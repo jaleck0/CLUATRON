@@ -17,6 +17,7 @@ pico_sdk_init()
 
 add_executable(cluatron
 		src/main.c
+		src/font4x6.c
 		)
 		
 target_compile_definitions(cluatron PRIVATE

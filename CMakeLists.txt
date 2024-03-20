@@ -12,7 +12,7 @@ pico_sdk_init()
 
 add_executable(cluatron
 	src/main.c
-	src/framebuffer.S
+	src/FramebufferFunctions.c
 )
 
 target_compile_definitions(cluatron PUBLIC -DPICO_SCANVIDEO_MAX_SCANLINE_BUFFER_WORDS=322

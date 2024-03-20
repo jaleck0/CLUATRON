@@ -1,35 +1,30 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
+set(PICO_BOARD vgaboard)
 
-#Pull in PICO SDK (must be before project)
 include(pico_sdk_import.cmake)
-
-# We also need PICO EXTRAS
 include(pico_extras_import.cmake)
 
-project(blink C CXX ASM)
+project(cluatron_project C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
-
-# Initialize the SDK
 pico_sdk_init()
 
 add_executable(cluatron
-		src/main.c
-		src/font4x6.c
-		)
-		
-target_compile_definitions(cluatron PRIVATE
-            PICO_SCANVIDEO_PLANE1_VARIABLE_FRAGMENT_DMA=1
-            #TURBO_BOOST=1
-            )
-		
-# pull in our pico_stdlib
-target_link_libraries(cluatron PRIVATE
-		pico_stdlib
-		pico_scanvideo_dpi
-        pico_multicore)
+	src/main.c
+	src/framebuffer.S
+)
 
-#create map/bin/hex file etc.
+target_compile_definitions(cluatron PUBLIC -DPICO_SCANVIDEO_MAX_SCANLINE_BUFFER_WORDS=322
+	-DPICO_SCANVIDEO_SCANLINE_BUFFER_COUNT=8)
+
+pico_enable_stdio_uart(cluatron 0)
+pico_enable_stdio_usb(cluatron 0)
+
 pico_add_extra_outputs(cluatron)
+
+target_link_libraries(cluatron PRIVATE
+	pico_stdlib	
+	pico_scanvideo_dpi
+	pico_multicore
+	hardware_interp)

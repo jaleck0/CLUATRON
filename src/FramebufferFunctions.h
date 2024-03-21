@@ -18,13 +18,12 @@ extern uint8_t fbuf[WIDTH * HEIGHT / 2];
 
 extern void setup_video(void);
 
-extern void set_colours(uint16_t *pclr);
+extern void set_colours();
+
+extern void ChangeColor(uint8_t index, uint16_t newCol);
 
 extern void plot_point(int x, int y, int clr);
 
-extern void core1_entry();
-
 extern void __time_critical_func(render_loop)(void);
-
 
 #endif

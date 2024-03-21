@@ -1,6 +1,6 @@
 #include "FramebufferFunctions.h"
 
-uint16_t    colours[COLOR_COUNT] =
+uint16_t colours[COLOR_COUNT] =
 {
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(  0u,   0u,   0u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(29u,   43u,   83u),
@@ -9,7 +9,7 @@ uint16_t    colours[COLOR_COUNT] =
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(  171u,   82u, 54u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8( 95u,  87u,  64u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8( 194u, 195u, 199u),
-    PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 255u, 255u),
+    PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 241u, 232u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8( 255u,  0u,  77u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u,   163u,   0u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(  255u, 236u,   39u),
@@ -29,17 +29,22 @@ void setup_video (void)
     scanvideo_timing_enable(true);
 }
 
-void set_colours (uint16_t *pclr)
+void set_colours ()
 {
     uint32_t *dpal = dblpal;
     for ( int i = 0; i < COLOR_COUNT; ++i )
     {
         for ( int j = 0; j < COLOR_COUNT; ++j )
         {
-            *dpal = ( pclr[i] << 16 ) | pclr[j];
+            *dpal = ( colours[i] << 16 ) | colours[j];
             ++dpal;
         }
     }
+}
+
+void ChangeColor(uint8_t index, uint16_t newCol)
+{
+    colours[index] = newCol;
 }
 
 void plot_point (int x, int y, int clr)
@@ -52,40 +57,6 @@ void plot_point (int x, int y, int clr)
         uint8_t *p = &fbuf[n];
         if ( odd ) *p = ( clr << 4 ) | ( *p & 0x0F );
         else *p = ( *p & 0xF0 ) | clr;
-    }
-}
-
-void core1_entry() 
-{
-    
-    uint32_t pos = 0;
-    uint32_t col = 0x7;
-    uint32_t mes = 0;
-
-    for(;;)
-    {
-        
-        plot_point(pos%320, pos/320, col);
-        pos++;
-        pos %= 76800;
-        
-        if (to_ms_since_boot(get_absolute_time()) - mes >= 1000)
-        {
-            mes = to_ms_since_boot(get_absolute_time());
-            pos = 0;
-            if (col == 0x7)
-            {
-                col = 0;
-            }
-            else
-            {
-                col = 0x7;
-            }
-        }
-        plot_point(0, 0, 8);
-		plot_point(319, 0, 8);
-		plot_point(0, 239, 8);
-		plot_point(319, 239, 8);
     }
 }
 

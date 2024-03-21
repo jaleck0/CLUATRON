@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "FramebufferFunctions.h"
+#include "CluatronOS.h"
 
 
 int main (void)
@@ -16,7 +17,7 @@ int main (void)
     set_sys_clock_khz (200000, true);
     stdio_init_all();
 
-    memset (fbuf, 0, sizeof(fbuf));
+    memset(fbuf, 0, sizeof(fbuf));
     set_colours(colours);
 
     setup_video();

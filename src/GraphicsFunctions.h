@@ -16,6 +16,8 @@ extern void SetTextColor(uint8_t col);
 
 extern void DrawRectfill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c);
 
-extern void DrawText(char* textString, int x, int y);
+extern void DrawText(char* textString, uint32_t x, uint32_t y);
+
+extern void DrawChar(char textString, uint32_t x, uint32_t y);
 
 #endif

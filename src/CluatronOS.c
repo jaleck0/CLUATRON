@@ -2,6 +2,7 @@
 #include "FramebufferFunctions.h"
 #include "GraphicsFunctions.h"
 #include "font4x6.h"
+#include "Terminal.h"
 
 uint16_t pico8pal[16] =
 {
@@ -47,40 +48,21 @@ void core1_entry()
 {
     SetFont(font4x6);
     
-    uint8_t p = 0;
+    uint8_t p = 1;
     uint32_t mes = 0;
-
-    DrawRectfill(0, 0, 320, 6, 7);
-    for(uint8_t i = 0; i<16; i++)
-    {
-        SetTextColor(i);
-        DrawText("4-BIT FRAMEBUFFER TEXT TEST",32,i*6);
-
-        DrawRectfill(i*16, 120, 8, 8+i*2, i);
-    }
 
     for(;;)
     {
-        if (to_ms_since_boot(get_absolute_time()) - mes >= 1000)
+        
+        if (to_ms_since_boot(get_absolute_time()) - mes >= 100)
         {
             mes = to_ms_since_boot(get_absolute_time());
-            if (p == 0)
-            {
-                for(uint8_t i=0;i<16;i++)
-                {
-                    ChangeColor(i,cgapal[i]);
-                }
-                p=1;
-            }
-            else
-            {
-                for(uint8_t i=0;i<16;i++)
-                {
-                    ChangeColor(i,pico8pal[i]);
-                }
-                p=0;
-            }
-            set_colours();
+
+            SetTextColor(p);
+            p++;
+            p %= 16;
+            TerminalPutString("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.\n");
+            
         }
     }
 }

@@ -86,18 +86,18 @@ void DrawRectfill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
     }
 }
 
-static void DrawLetter(unsigned int fontIndex, int x, int y)
+static void DrawLetter(unsigned int fontIndex, uint32_t x, uint32_t y)
 {
-    unsigned int sHeigth = 6;
+    uint32_t sHeigth = 6;
 
-    unsigned int currentByte = font4x6[fontIndex];
-    unsigned int currentByteIndex = fontIndex;
+    uint32_t currentByte = font4x6[fontIndex];
+    uint32_t currentByteIndex = fontIndex;
 
-    for(unsigned int h = 0; h < sHeigth; h++)
+    for(uint32_t h = 0; h < sHeigth; h++)
     {
-        for(unsigned int w = 0; w < 1; w++)
+        for(uint32_t w = 0; w < 1; w++)
         {
-            for(unsigned int b = 0; b < 8; b++)
+            for(uint32_t b = 0; b < 8; b++)
             {
                 if (currentByte<<b & 0x80)
                 {
@@ -110,7 +110,7 @@ static void DrawLetter(unsigned int fontIndex, int x, int y)
     }
 }
 
-void DrawText(char* textString, int x, int y)
+void DrawText(char* textString, uint32_t x, uint32_t y)
 {
     size_t stringLength = strlen(textString);
     
@@ -119,10 +119,10 @@ void DrawText(char* textString, int x, int y)
         return;
     }
 
-    int currentX = x;
-    int currentY = y;
+    uint32_t currentX = x;
+    uint32_t currentY = y;
 
-    for(int i = 0; i < stringLength; i++)
+    for(uint32_t i = 0; i < stringLength; i++)
     {
         if (textString[i] == '\n')
         {
@@ -131,11 +131,26 @@ void DrawText(char* textString, int x, int y)
         }
         else
         {
-            unsigned int currentFontIndex = textString[i] - 32;
+            uint32_t currentFontIndex = textString[i] - 32;
 
             DrawLetter(3+(currentFontIndex*6), currentX, currentY);
 
             currentX += textwidth;
         }
     }
+}
+
+void DrawChar(char textString, uint32_t x, uint32_t y)
+{
+    uint32_t currentX = x;
+    uint32_t currentY = y;
+
+
+    uint32_t currentFontIndex = textString - 32;
+
+    DrawLetter(3+(currentFontIndex*6), currentX, currentY);
+
+    currentX += textwidth;
+        
+    
 }

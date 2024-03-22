@@ -70,11 +70,11 @@ void __time_critical_func(render_loop)(void)
         uint8_t *twopix = &fbuf[(WIDTH / 2) * iScan];
 
         for ( int iCol = 0; iCol < WIDTH / 2; ++iCol )
-            {
+        {
             ++twoclr;
             *twoclr = dblpal[*twopix];
             ++twopix;
-            }
+        }
         ++twoclr;
 
         *twoclr = COMPOSABLE_EOL_ALIGN << 16;

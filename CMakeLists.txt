@@ -14,6 +14,7 @@ add_executable(cluatron
 	src/main.c
 	src/FramebufferFunctions.c
 	src/GraphicsFunctions.c
+	src/Terminal.c
 	src/CluatronOS.c
 	src/font4x6.c
 )

@@ -1,5 +1,6 @@
 #include "Terminal.h"
 #include <string.h>
+#include <stdlib.h>
 
 uint32_t textX = 0;
 uint32_t textY = 0;
@@ -55,4 +56,11 @@ void TerminalPutString(char* textString)
     {
         TerminalPutCharacter(textString[i]);
     }
+}
+
+extern void TerminalPutNumber(int64_t num)
+{
+    char snum[64];
+    itoa(num, snum, 10);
+    TerminalPutString(snum);
 }

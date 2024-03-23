@@ -392,7 +392,7 @@ unsigned char font4x6[] = {
 0b10100000,
 0b10100000,
 0b11100000,
-0b11100010,
+0b11100000,
 0b00000000,
 //X
 0b10100000,
@@ -422,7 +422,7 @@ unsigned char font4x6[] = {
 0b10000000,
 0b11000000,
 0b00000000,
-//0,				//for the life of me I have no idea why this is needed
+0,				//for the life of me I have no idea why this is needed
 //\
 0b10000000,
 0b10000000,

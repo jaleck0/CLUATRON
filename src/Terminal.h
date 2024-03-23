@@ -12,4 +12,6 @@ extern void TerminalPutCharacter(char textChar);
 
 extern void TerminalPutString(char* textString);
 
+extern void TerminalPutNumber(int64_t num);
+
 #endif

@@ -8,6 +8,10 @@ extern void TerminalSetBackCol(uint8_t col);
 
 extern void TerminalClear();
 
+extern void DrawWritePoint();
+
+extern void RemoveWritePoint();
+
 extern void TerminalPutCharacter(char textChar);
 
 extern void TerminalPutString(char* textString);

@@ -60,11 +60,11 @@ void core1_entry()
     cls(1);
     SetTextColor(11);
     TerminalSetBackCol(1);
-    TerminalPutString("CLUATRON OS ~ JALECKO 2024         \r\n");
+    TerminalPutString("                        ---CLUATRON OS ~ JALECKO 2024---\n");
     tuh_init(BOARD_TUH_RHPORT);
 
-    //uint8_t p = 1;
-    //uint32_t mes = 0;
+    uint8_t vis = 0;
+    uint32_t mes = 0;
 
     for(;;)
     {
@@ -72,19 +72,21 @@ void core1_entry()
 
         cdc_app_task();
         //hid_app_task();
-        /*
-        if (to_ms_since_boot(get_absolute_time()) - mes >= 100)
+        
+        if (to_ms_since_boot(get_absolute_time()) - mes >= 500)
         {
             mes = to_ms_since_boot(get_absolute_time());
 
-            SetTextColor(p);
-            p++;
-            p %= 16;
-            
-            TerminalPutString("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.");
-            TerminalPutNumber(mes);
-            TerminalPutString("\n");
-            
-        }*/
+            if(vis)
+            {
+                DrawWritePoint();
+                vis = 0;
+            }
+            else
+            {
+                RemoveWritePoint();
+                vis = 1;
+            }
+        }
     }
 }

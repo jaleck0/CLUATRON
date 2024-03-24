@@ -20,6 +20,11 @@ void cls(uint8_t col)
     }
 }
 
+uint8_t GetTextCol()
+{
+    return textColor;
+}
+
 void SetFont(unsigned char* newFont)
 {
     currentFont = newFont;

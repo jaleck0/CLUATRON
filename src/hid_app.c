@@ -166,12 +166,15 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
       if ( find_key_in_report(&prev_report, report->keycode[i]) )
       {
         // exist in previous report means the current key is holding
-      }else
+      }
+      else
       {
         // not existed in previous report means the current key is pressed
         bool const is_shift = report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
+        bool const is_ctrl = report->modifier & (KEYBOARD_MODIFIER_LEFTCTRL | KEYBOARD_MODIFIER_RIGHTCTRL);
         uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
         //putchar(ch)
+        //TerminalPutNumber(report->keycode[i]);
         TerminalPutCharacter(ch);
         if ( ch == '\r' ) TerminalPutCharacter('\n'); // added new line for enter key
 

@@ -19,9 +19,9 @@ add_executable(cluatron
 	src/FramebufferFunctions.c
 	src/GraphicsFunctions.c
 	src/Terminal.c
-	src/msc_app.c
 	src/hid_app.c
 	src/cdc_app.c
+	src/Input.c
 	src/CluatronOS.c
 	src/font4x6.c
 )

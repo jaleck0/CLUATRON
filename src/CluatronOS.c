@@ -3,6 +3,7 @@
 #include "GraphicsFunctions.h"
 #include "font4x6.h"
 #include "Terminal.h"
+#include "Input.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -50,7 +51,7 @@ uint16_t cgapal[16] =
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 255u, 255u)
 };
 
-extern void cdc_app_task(void);
+
 //extern void hid_app_task(void);
 
 void core1_entry() 
@@ -61,6 +62,7 @@ void core1_entry()
     SetTextColor(11);
     TerminalSetBackCol(1);
     TerminalPutString("                        ---CLUATRON OS ~ JALECKO 2024---\n");
+    
     tuh_init(BOARD_TUH_RHPORT);
 
     uint8_t vis = 0;
@@ -68,10 +70,8 @@ void core1_entry()
 
     for(;;)
     {
-        tuh_task();
-
-        cdc_app_task();
         //hid_app_task();
+        ReadInputs();
         
         if (to_ms_since_boot(get_absolute_time()) - mes >= 500)
         {

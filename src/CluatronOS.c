@@ -72,7 +72,22 @@ void core1_entry()
     {
         //hid_app_task();
         ReadInputs();
+        if (KeyboardGetPressed(USB_A) == 1)
+        {
+            TerminalPutString("P");
+        }
         
+        if (KeyboardGetReleased(USB_A) == 1)
+        {
+            TerminalPutString("R");
+        }
+
+        if (KeyboardGetHold(USB_B) == 1)
+        {
+            TerminalPutString("B");
+        }
+
+
         if (to_ms_since_boot(get_absolute_time()) - mes >= 500)
         {
             mes = to_ms_since_boot(get_absolute_time());

@@ -23,9 +23,11 @@
  *
  */
 
+#include "pico/stdlib.h"
 #include "bsp/board.h"
 #include "tusb.h"
 #include "Terminal.h"
+#include "Input.h"
 
 //--------------------------------------------------------------------+
 // MACRO TYPEDEF CONSTANT ENUM DECLARATION
@@ -75,6 +77,7 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
   // Interface protocol (hid_interface_protocol_enum_t)
   char* protocol_str[] = { "None", "Keyboard", "Mouse" };
   uint8_t itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
+  KeyboardSetConnected();
 
   //printf("HID Interface Protocol = %s\r\n", protocol_str[itf_protocol]);
   TerminalPutString("HID Interface Protocol = ");
@@ -107,6 +110,7 @@ void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance)
   TerminalPutString(", instance = ");
   TerminalPutNumber(instance);
   TerminalPutString(" is unmounted\r\n");
+  KeyboardSetDisconnected();
 }
 
 // Invoked when received report from device via interrupt endpoint
@@ -148,9 +152,11 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *report, uint8
 {
   for(uint8_t i=0; i<6; i++)
   {
-    if (report->keycode[i] == keycode)  return true;
+    if (report->keycode[i] == keycode) 
+    {
+      return true;
+    } 
   }
-
   return false;
 }
 ///////////////KEYBOARD INPUT IMPORTANT
@@ -165,22 +171,34 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
     {
       if ( find_key_in_report(&prev_report, report->keycode[i]) )
       {
-        // exist in previous report means the current key is holding
+        
       }
       else
       {
         // not existed in previous report means the current key is pressed
         bool const is_shift = report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
         bool const is_ctrl = report->modifier & (KEYBOARD_MODIFIER_LEFTCTRL | KEYBOARD_MODIFIER_RIGHTCTRL);
-        uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
+        KeyboardSetModifiers( (uint8_t)is_shift, (uint8_t)is_shift);
+        
+        KeyboardSetKeyPressed(report->keycode[i]);
+
+        //uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
         //putchar(ch)
         //TerminalPutNumber(report->keycode[i]);
-        TerminalPutCharacter(ch);
-        if ( ch == '\r' ) TerminalPutCharacter('\n'); // added new line for enter key
+        //TerminalPutCharacter(ch);
+        //if ( ch == '\r' ) TerminalPutCharacter('\n'); // added new line for enter key
 
         //fflush(stdout); // flush right away, else nanolib will wait for newline
       }
     }
+    for(uint8_t key = 0; key <= 127; key++)
+    {
+      if (KeyboardGetHold(key) == 1 && !(find_key_in_report(report, key)))
+      {
+        KeyboardSetKeyReleased(key);
+      }
+    }
+    
     // TODO example skips key released
   }
 

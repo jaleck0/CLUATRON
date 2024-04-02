@@ -37,27 +37,30 @@ void RemoveWritePoint()
 
 void TerminalPutCharacter(char textChar)
 {
-    DrawRectfill(textX, textY, 4, 6, backCol);
-    if (textChar == '\n')
+    if (textChar != '\0')
     {
-        textX = 0;
-        textY += 6;
-    }
-    else if(textChar >= ' ')
-    {
-        DrawChar(textChar, textX, textY);
-        textX += 4;
-    }
-    
-    if (textX > (320-4))
-    {
-        textY += 6;
-        textX = 0;
-    }
+        DrawRectfill(textX, textY, 4, 6, backCol);
+        if (textChar == '\n')
+        {
+            textX = 0;
+            textY += 6;
+        }
+        else if(textChar >= ' ')
+        {
+            DrawChar(textChar, textX, textY);
+            textX += 4;
+        }
+        
+        if (textX > (320-4))
+        {
+            textY += 6;
+            textX = 0;
+        }
 
-    if (textY > (240-6))
-    {
-        TerminalClear();
+        if (textY > (240-6))
+        {
+            TerminalClear();
+        }
     }
 }
 

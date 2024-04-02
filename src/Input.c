@@ -14,6 +14,8 @@ uint8_t KeycodesReleased[256];
 
 extern void cdc_app_task(void);
 
+char putKeyoardChar = 0;
+
 void ReadInputs()
 {
     for(uint8_t key = 0; key <= 127; key++)
@@ -29,11 +31,10 @@ void ReadInputs()
             KeycodesHold[key] = 0;
         }
     }
+    //putKeyoardChar = 0;
 
     tuh_task();
     cdc_app_task();
-
-    
 }
 
 uint8_t KeyboardGetHold(KeyboardInput input)
@@ -58,7 +59,9 @@ uint8_t KeyboardGetConnected()
 
 char KeyboardGiveLetter()
 {
-    return 0;
+    char returnChar = putKeyoardChar;
+    putKeyoardChar = 0;
+    return returnChar;
 }
 
 void KeyboardSetConnected()
@@ -87,6 +90,15 @@ void KeyboardSetModifiers(uint8_t setShift, uint8_t setCtrl)
 {
     keyboardShift = setShift;
     keyboardCtrl = setCtrl;
+}
+
+void KeyboardSetInputChar(char keyCode)
+{
+    if ( keyCode == '\r' ) 
+    {
+        keyCode = '\n';
+    }
+    putKeyoardChar = keyCode;
 }
 
 uint8_t ControllerGetHold(uint8_t controllerNumber, ControlInput input)

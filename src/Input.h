@@ -121,6 +121,8 @@ typedef enum
     USB_KP_APP
 } KeyboardInput;
 
+
+
 void ReadInputs();
 
 uint8_t KeyboardGetHold(KeyboardInput input);
@@ -134,6 +136,7 @@ void KeyboardSetDisconnected();
 void KeyboardSetKeyPressed(KeyboardInput keyCode);
 void KeyboardSetKeyReleased(KeyboardInput keyCode);
 void KeyboardSetModifiers(uint8_t setShift, uint8_t setCtrl);
+void KeyboardSetInputChar(char keyCode);
 
 uint8_t ControllerGetHold(uint8_t controllerNumber, ControlInput input);
 uint8_t ControllerGetPressed(uint8_t controllerNumber, ControlInput input);

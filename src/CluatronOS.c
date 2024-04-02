@@ -70,24 +70,28 @@ void core1_entry()
 
     for(;;)
     {
-        //hid_app_task();
         ReadInputs();
-        if (KeyboardGetPressed(USB_A) == 1)
+        
+        TerminalPutCharacter(KeyboardGiveLetter());
+        
+        if (KeyboardGetPressed(USB_F1))
         {
-            TerminalPutString("P");
+            for(uint8_t i = 0; i<16; i++)
+            {
+                ChangeColor( i, pico8pal[i]);
+            }
+            set_colours();
+        }
+
+        if (KeyboardGetPressed(USB_F2))
+        {
+            for(uint8_t i = 0; i<16; i++)
+            {
+                ChangeColor( i, cgapal[i]);
+            }
+            set_colours();
         }
         
-        if (KeyboardGetReleased(USB_A) == 1)
-        {
-            TerminalPutString("R");
-        }
-
-        if (KeyboardGetHold(USB_B) == 1)
-        {
-            TerminalPutString("B");
-        }
-
-
         if (to_ms_since_boot(get_absolute_time()) - mes >= 500)
         {
             mes = to_ms_since_boot(get_absolute_time());

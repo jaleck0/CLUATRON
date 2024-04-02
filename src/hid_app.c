@@ -163,6 +163,7 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *report, uint8
 static void process_kbd_report(hid_keyboard_report_t const *report)
 {
   static hid_keyboard_report_t prev_report = { 0, 0, {0} }; // previous report to check key released
+  uint8_t changed = 0;
 
   //------------- example code ignore control (non-printable) key affects -------------//
   for(uint8_t i=0; i<6; i++)
@@ -181,8 +182,14 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
         KeyboardSetModifiers( (uint8_t)is_shift, (uint8_t)is_shift);
         
         KeyboardSetKeyPressed(report->keycode[i]);
-
-        //uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
+        if (changed == 0)
+        {
+          uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
+          //TerminalPutCharacter(ch);
+          KeyboardSetInputChar(ch);
+          changed = 1;
+        }
+        //;
         //putchar(ch)
         //TerminalPutNumber(report->keycode[i]);
         //TerminalPutCharacter(ch);
@@ -201,7 +208,6 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
     
     // TODO example skips key released
   }
-
   prev_report = *report;
 }
 

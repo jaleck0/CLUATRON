@@ -92,6 +92,16 @@ void KeyboardSetModifiers(uint8_t setShift, uint8_t setCtrl)
     keyboardCtrl = setCtrl;
 }
 
+uint8_t KeyboardGetShift()
+{
+    return keyboardShift;
+}
+
+uint8_t KeyboardGetCtrl()
+{
+    return keyboardCtrl;
+}
+
 void KeyboardSetInputChar(char keyCode)
 {
     if ( keyCode == '\r' ) 

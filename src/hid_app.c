@@ -179,7 +179,7 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
         // not existed in previous report means the current key is pressed
         bool const is_shift = report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
         bool const is_ctrl = report->modifier & (KEYBOARD_MODIFIER_LEFTCTRL | KEYBOARD_MODIFIER_RIGHTCTRL);
-        KeyboardSetModifiers( (uint8_t)is_shift, (uint8_t)is_shift);
+        KeyboardSetModifiers( (uint8_t)is_shift, (uint8_t)is_ctrl);
         
         KeyboardSetKeyPressed(report->keycode[i]);
         if (changed == 0)

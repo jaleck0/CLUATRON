@@ -129,6 +129,8 @@ uint8_t KeyboardGetHold(KeyboardInput input);
 uint8_t KeyboardGetPressed(KeyboardInput input);
 uint8_t KeyboardGetReleased(KeyboardInput input);
 uint8_t KeyboardGetConnected();
+uint8_t KeyboardGetShift();
+uint8_t KeyboardGetCtrl();
 char KeyboardGiveLetter();
 
 void KeyboardSetConnected();

@@ -35,6 +35,20 @@ void RemoveWritePoint()
     DrawRectfill(textX, textY, 1, 5, backCol);
 }
 
+void TerminalBackspace()
+{
+    DrawRectfill(textX, textY, 4, 6, backCol);
+    textX -= 4;
+    
+    if (textX > 316 && textY >= 6)
+    {
+        textX = 316;
+        textY -= 6;
+    }
+
+    DrawRectfill(textX, textY, 4, 6, backCol);
+}
+
 void TerminalPutCharacter(char textChar)
 {
     if (textChar != '\0')

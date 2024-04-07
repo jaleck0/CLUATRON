@@ -73,6 +73,25 @@ static int l_bootsel(lua_State *L) {
     return 0;
 }
 
+// pcol(col)
+static int l_set_printcolor(lua_State *L) {
+    int col = lua_tointeger(L, 1);
+    lua_pop(L, 1);
+    col %= 16;
+    SetTextColor(col);
+    return 0;
+}
+
+// bcol(col)
+static int l_set_backcolor(lua_State *L) {
+    int col = lua_tointeger(L, 1);
+    lua_pop(L, 1);
+    col %= 16;
+    TerminalSetBackCol(col);
+    return 0;
+}
+
+
 // set_output(pin, bool)
 static int l_set_output(lua_State *L) {
     int pin = lua_tointeger(L, 1);
@@ -126,11 +145,13 @@ void core1_entry()
 
     lua_register(L, "reset", l_reset);
     lua_register(L, "bootsel", l_bootsel);
-    lua_register(L, "set_output", l_set_output);
-    lua_register(L, "set_pin", l_set_pin);
-    lua_register(L, "get_pin", l_get_pin);
+    lua_register(L, "pcol", l_set_printcolor);
+    lua_register(L, "bcol", l_set_backcolor);
+    //lua_register(L, "set_output", l_set_output);
+    //lua_register(L, "set_pin", l_set_pin);
+    //lua_register(L, "get_pin", l_get_pin);
 
-    TerminalPutString("\n*** picolua\n Ctrl-C  Clear buffer\n Ctrl-D  Execute buffer\n Ctrl-L  Clear screen\n\n");
+    TerminalPutString("\n Ctrl-C  Clear buffer\n Ctrl-L  Clear screen\n Enter   Execute buffer\n\n");
     TerminalPutString(PROMPT);
 
     uint8_t vis = 0;
@@ -140,8 +161,6 @@ void core1_entry()
     {
         ReadInputs();
         
-        //TerminalPutCharacter(KeyboardGiveLetter());
-
         ch = (char)KeyboardGiveLetter();
 
         if(ch == '\r') 
@@ -156,20 +175,16 @@ void core1_entry()
             if(luaL_bufflen(&buf) > 0) 
             {
                 luaL_buffsub(&buf, 1);
-                
-                //printf("\b \b");
             }
         }
         else if (KeyboardGetPressed(USB_L) && KeyboardGetCtrl())//if(ch == 0x0C) 
         { // Ctrl-L (ANSI clear screen)
-            //printf("\x1b[2J\x1b[1;1H" PROMPT);
             TerminalClear();
             TerminalPutString(PROMPT);
         }
         else if (KeyboardGetPressed(USB_C) && KeyboardGetCtrl())//if(ch == 0x03) 
         { // Ctrl-C (clear buffer without executing)
             luaL_buffinit(L, &buf);
-            //printf("\n" PROMPT);
             TerminalPutString("\n");
             TerminalPutString(PROMPT);
         }
@@ -178,7 +193,7 @@ void core1_entry()
             TerminalPutCharacter('\n');
             luaL_pushresult(&buf);
             const char *s = lua_tolstring(L, -1, &len);
-            status = luaL_loadbuffer(L, s, len, "picolua");
+            status = luaL_loadbuffer(L, s, len, "cluatron");
 
             if(status != LUA_OK) 
             {
@@ -186,7 +201,6 @@ void core1_entry()
                 TerminalPutString("parse error: ");
                 TerminalPutString(msg);
                 TerminalPutString("\n");
-                //lua_writestringerror("parse error: %s\n", msg);
             }
             else
             {
@@ -213,16 +227,6 @@ void core1_entry()
             TerminalPutCharacter(ch);
             luaL_addchar(&buf, ch);
         }
-
-        /*
-        if (KeyboardGetCtrl())
-        {
-            if (KeyboardGetPressed(USB_L))
-            {
-                TerminalClear();
-            }
-        }*/
-
 
         if (KeyboardGetPressed(USB_F1))
         {

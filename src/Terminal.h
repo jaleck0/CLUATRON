@@ -6,6 +6,8 @@ extern void TerminalSetPosition(uint32_t x, uint32_t y);
 
 extern void TerminalSetBackCol(uint8_t col);
 
+extern uint8_t TerminalGetBackCol();
+
 extern void TerminalClear();
 
 extern void DrawWritePoint();

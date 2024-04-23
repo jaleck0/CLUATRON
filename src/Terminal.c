@@ -18,6 +18,11 @@ void TerminalSetBackCol(uint8_t col)
     backCol = col;
 }
 
+uint8_t TerminalGetBackCol()
+{
+    return backCol;
+}
+
 void TerminalClear()
 {
     cls(backCol);

@@ -11,7 +11,7 @@ Programs for the CLUATRON will be written in a modified version of LUA 5.4.6 wit
 This will create the desired excecutable, this instalation does require the use of CMake and the PI PICO SDK with a compiled pico-extras library 
 
 ```
-cd CLUATRON
+cd CLUATRON/Core
 mkdir build
 cd build
 cmake ..

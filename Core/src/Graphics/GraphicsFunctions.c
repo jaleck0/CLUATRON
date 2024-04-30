@@ -38,6 +38,126 @@ void SetTextColor(uint8_t col)
     textColor = col;
 }
 
+void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint8_t c)
+{
+    if (x1 == x2)
+        for (int i = y1; i < y2; i++)
+        {
+            plot_point(x1, i, c);
+        }
+	else if (y1 == y2)
+        for (int i = x1; i < x2; i++)
+        {
+            plot_point(i, y1, c);
+        }
+	else {
+		int e;
+		signed int dx,dy,j, temp;
+		signed char s1,s2, xchange;
+		signed int x,y;
+
+		x = x1;
+		y = y1;
+	
+		//take absolute value
+		if (x2 < x1) {
+			dx = x1 - x2;
+			s1 = -1;
+		}
+		else if (x2 == x1) {
+			dx = 0;
+			s1 = 0;
+		}
+		else {
+			dx = x2 - x1;
+			s1 = 1;
+		}
+
+		if (y2 < y1) {
+			dy = y1 - y2;
+			s2 = -1;
+		}
+		else if (y2 == y1) {
+			dy = 0;
+			s2 = 0;
+		}
+		else {
+			dy = y2 - y1;
+			s2 = 1;
+		}
+
+		xchange = 0;   
+
+		if (dy>dx) {
+			temp = dx;
+			dx = dy;
+			dy = temp;
+			xchange = 1;
+		} 
+
+		e = ((int)dy<<1) - dx;  
+	 
+		for (j=0; j<=dx; j++) {
+			plot_point(x, y, c);
+		 
+			if (e>=0) {
+				if (xchange==1) x = x + s1;
+				else y = y + s2;
+				e = e - ((int)dx<<1);
+			}
+			if (xchange==1)
+				y = y + s2;
+			else
+				x = x + s1;
+			e = e + ((int)dy<<1);
+		}
+	}
+}
+
+void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
+{
+    int32_t x1 = x;
+    int32_t y1 = y;
+    int32_t x2 = x + w;
+    int32_t y2 = y + h;
+
+    if (x < 320 && x2 >= 0)
+    {
+        if (y >= 0 && y < 240)
+        {
+            for(int i = x; i < x2; i++)
+            {
+                plot_point(i,y,c);
+            }
+        }
+        if (y2 >= 0 && y2 < 240)
+        {
+            for(int i = x; i < x2; i++)
+            {
+                plot_point(i,y2,c);
+            }
+        }
+    }
+
+    if (y < 240 && y2 >= 0)
+    {
+        if (x >= 0 && x < 320)
+        {
+            for(int i = y+1; i < y2-1; i++)
+            {
+                plot_point(x,i,c);
+            }
+        }
+        if (x2 >= 0 && x2 < 320)
+        {
+            for(int i = y+1; i < y2-1; i++)
+            {
+                plot_point(x2,i,c);
+            }
+        }
+    }
+}
+
 void DrawRectfill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
 {
     int32_t x1 = x;
@@ -89,6 +209,28 @@ void DrawRectfill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
             }
         }
     }
+}
+
+void DrawTri(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, uint8_t c)
+{
+    DrawLine(x1,y1,x2,y2,c);
+    DrawLine(x1,y1,x3,y3,c);
+    DrawLine(x3,y3,x2,y2,c);
+}
+
+void DrawTrifill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, uint8_t c)
+{
+
+}
+
+void DrawEllipse(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
+{
+
+}
+
+void DrawEllipsefill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
+{
+
 }
 
 static void DrawLetter(unsigned int fontIndex, uint32_t x, uint32_t y)
@@ -156,6 +298,4 @@ void DrawChar(char textString, uint32_t x, uint32_t y)
     DrawLetter(3+(currentFontIndex*6), currentX, currentY);
 
     currentX += textwidth;
-        
-    
 }

@@ -69,38 +69,6 @@ static int l_get_rgbcolor(lua_State* L)
     return 1;
 }
 
-
-// set_output(pin, bool)
-static int l_set_output(lua_State* L) 
-{
-    int pin = lua_tointeger(L, 1);
-    int output = lua_toboolean(L, 2);
-    lua_pop(L, 2);
-    gpio_init(pin);
-    gpio_set_dir(pin, output);
-    return 0;
-}
-
-// set_pin(pin, bool)
-static int l_set_pin(lua_State* L) 
-{
-    int pin = lua_tointeger(L, 1);
-    int state = lua_toboolean(L, 2);
-    lua_pop(L, 2);
-    gpio_put(pin, state == 1);
-    return 0;
-}
-
-// bool get_pin(pin)
-static int l_get_pin(lua_State* L) 
-{
-    int pin = lua_tointeger(L, 1);
-    int state = gpio_get(pin);
-    lua_pop(L, 1);
-    lua_pushboolean(L, state);
-    return 1;
-}
-
 //void dot(x,y,color)
 static int l_put_pixel(lua_State* L)
 {
@@ -127,6 +95,39 @@ static int l_clearscreen(lua_State* L)
     return 0;
 }
 
+//void line(x1,y1,x2,y2,color)
+static int l_put_line(lua_State* L)
+{
+    int x1 = lua_tointeger(L, 1);
+    int y1 = lua_tointeger(L, 2);
+    int x2 = lua_tointeger(L, 3);
+    int y2 = lua_tointeger(L, 4);
+    int col = lua_tointeger(L, 5);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawLine(x1, y1, x2, y2, col);
+    
+    return 0;
+}
+
+
+//void rect(x,y,w,h,color)
+static int l_put_rect(lua_State* L)
+{
+    int xpos = lua_tointeger(L, 1);
+    int ypos = lua_tointeger(L, 2);
+    int w = lua_tointeger(L, 3);
+    int h = lua_tointeger(L, 4);
+    int col = lua_tointeger(L, 5);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawRect(xpos, ypos, w, h, col);
+    
+    return 0;
+}
+
 //void rectfill(x,y,w,h,color)
 static int l_put_rectfill(lua_State* L)
 {
@@ -139,6 +140,60 @@ static int l_put_rectfill(lua_State* L)
     lua_pop(L, 1);
     col %= 16;
     DrawRectfill(xpos, ypos, w, h, col);
+    
+    return 0;
+}
+
+//void tri(x1,y1,x2,y2,x3,y3,color)
+static int l_put_tri(lua_State* L)
+{
+    int x1 = lua_tointeger(L, 1);
+    int y1 = lua_tointeger(L, 2);
+    int x2 = lua_tointeger(L, 3);
+    int y2 = lua_tointeger(L, 4);
+    int x3 = lua_tointeger(L, 5);
+    int y3 = lua_tointeger(L, 6);
+    int col = lua_tointeger(L, 7);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawTri(x1, y1, x2, y2, x3, y3, col);
+    
+    return 0;
+}
+
+//void text(str,x1,y1,color)
+static int l_put_text(lua_State* L)
+{
+    char* str = lua_tostring(L, 1);
+    int x = lua_tointeger(L, 2);
+    int y = lua_tointeger(L, 3);
+    int col = lua_tointeger(L, 4);
+
+    lua_pop(L, 1);
+    col %= 16;
+    SetTextColor(col);
+    DrawText(str, x, y);
+    
+    return 0;
+}
+
+//void textfill(str,x1,y1,color,color)
+static int l_put_textfill(lua_State* L)
+{
+    char* str = lua_tostring(L, 1);
+    int x = lua_tointeger(L, 2);
+    int y = lua_tointeger(L, 3);
+    int col0 = lua_tointeger(L, 4);
+    int col1 = lua_tointeger(L, 5);
+
+    lua_pop(L, 1);
+    col0 %= 16;
+    col1 %= 16;
+    uint32_t len = strlen(str);
+    DrawRectfill(x,y,len*4,6,col1);
+    SetTextColor(col0);
+    DrawText(str, x, y);
     
     return 0;
 }
@@ -162,7 +217,12 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "dot", l_put_pixel);
     lua_register(L, "pal", l_set_palindexcolor);
     lua_register(L, "cls", l_clearscreen);
+    lua_register(L, "line", l_put_line);
+    lua_register(L, "rect", l_put_rect);
     lua_register(L, "rectfill", l_put_rectfill);
+    lua_register(L, "tri", l_put_tri);
+    lua_register(L, "text", l_put_text);
+    lua_register(L, "textfill", l_put_textfill);
     lua_register(L, "millis", l_get_millis);
     lua_register(L, "rgb", l_get_rgbcolor);
 }

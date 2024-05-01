@@ -2,6 +2,7 @@
 #include "../Framebuffer/FramebufferFunctions.h"
 #include "font4x6.h"
 #include <string.h>
+#include <stdlib.h>
 
 unsigned char* currentFont = NULL;
 unsigned int textwidth = 0; 
@@ -59,7 +60,6 @@ void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint8_t c)
 		x = x1;
 		y = y1;
 	
-		//take absolute value
 		if (x2 < x1) {
 			dx = x1 - x2;
 			s1 = -1;
@@ -134,7 +134,7 @@ void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
         {
             for(int i = x; i < x2; i++)
             {
-                plot_point(i,y2,c);
+                plot_point(i,y2-1,c);
             }
         }
     }
@@ -152,7 +152,7 @@ void DrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
         {
             for(int i = y+1; i < y2-1; i++)
             {
-                plot_point(x2,i,c);
+                plot_point(x2-1,i,c);
             }
         }
     }
@@ -223,14 +223,109 @@ void DrawTrifill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int
 
 }
 
+void DrawCirc(int32_t x, int32_t y, int32_t r, uint8_t c)
+{
+    int ex = -r;
+    int ey = 0;
+    int err = 2-2*r;
+    do {
+        plot_point(x-ex, y+ey, c); 
+        plot_point(x-ey, y-ex, c); 
+        plot_point(x+ex, y-ey, c); 
+        plot_point(x+ey, y+ex, c);
+        r = err;
+        if (r <= ey) err += ++ey*2+1;          
+        if (r > ex || err > ey) err += ++ex*2+1; 
+    } while (ex < 0);
+}
+
+void DrawCircfill(int32_t x, int32_t y, int32_t r, uint8_t c)
+{
+    int ex = -r;
+    int ey = 0;
+    int err = 2-2*r;
+    do {
+        for(int i = ex; i <= 0; i++)
+        {
+        plot_point(x-ex+i, y+ey, c); 
+        plot_point(x-ey, y-ex+i, c); 
+        plot_point(x+ex-i, y-ey, c); 
+        plot_point(x+ey, y+ex-i, c);
+        }
+        r = err;
+        if (r <= ey) err += ++ey*2+1;          
+        if (r > ex || err > ey) err += ++ex*2+1; 
+    } while (ex < 0);
+}
+
 void DrawEllipse(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
 {
+    int x0 = x;
+    int y0 = y;
+    int x1 = x+w;
+    int y1 = y+h;
 
+    int a = abs(x1-x0), b = abs(y1-y0), b1 = b&1;
+    long dx = 4*(1-a)*b*b, dy = 4*(b1+1)*a*a;
+    long err = dx+dy+b1*a*a, e2; 
+
+    if (x0 > x1) { x0 = x1; x1 += a; }  
+    if (y0 > y1) y0 = y1; 
+    y0 += (b+1)/2; y1 = y0-b1;  
+    a *= 8*a; b1 = 8*b*b;
+
+    do {
+        plot_point(x1, y0, c); 
+        plot_point(x0, y0, c); 
+        plot_point(x0, y1, c); 
+        plot_point(x1, y1, c); 
+        e2 = 2*err;
+        if (e2 <= dy) { y0++; y1--; err += dy += a; }  
+        if (e2 >= dx || 2*err > dy) { x0++; x1--; err += dx += b1; } 
+        } 
+        while (x0 <= x1);
+    
+        while (y0-y1 < b) {  
+        plot_point(x0-1, y0, c); 
+        plot_point(x1+1, y0++, c); 
+        plot_point(x0-1, y1, c);
+        plot_point(x1+1, y1--, c); 
+    }        
 }
+
 
 void DrawEllipsefill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c)
 {
+    int wt = w/2;
+    int ht = h/2;
+    int hh = ht * ht;
+    int ww = wt * wt;
+    int hhww = hh * ww;
+    int x0 = wt;
+    int dx = 0;
+    int originx = x+wt;
+    int originy = y+ht;
 
+    for (int ix = -wt; ix < wt; ix++)
+    {
+        plot_point(originx + ix, originy, c);
+    }
+
+    for (int iy = 1; iy <= ht; iy++)
+    {
+        int x1 = x0 - (dx - 1); 
+        for ( ; x1 > 0; x1--)
+            if (x1*x1*hh + iy*iy*ww <= hhww)   
+                break;
+        dx = x0 - x1;
+        x0 = x1;
+
+        for (int ix = -x0; ix <= x0; ix++)
+        {
+            plot_point(originx + ix, originy - iy, c);
+            plot_point(originx + ix, originy + iy, c);
+        }
+    }
 }
 
 static void DrawLetter(unsigned int fontIndex, uint32_t x, uint32_t y)

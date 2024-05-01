@@ -26,6 +26,10 @@ extern void DrawTri(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, 
 
 extern void DrawTrifill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, uint8_t c);
 
+extern void DrawCirc(int32_t x, int32_t y, int32_t r, uint8_t c);
+
+extern void DrawCircfill(int32_t x, int32_t y, int32_t r, uint8_t c);
+
 extern void DrawEllipse(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c);
 
 extern void DrawEllipsefill(int32_t x, int32_t y, int32_t w, int32_t h, uint8_t c);

@@ -162,6 +162,86 @@ static int l_put_tri(lua_State* L)
     return 0;
 }
 
+//void tri(x1,y1,x2,y2,x3,y3,color)
+static int l_put_trifill(lua_State* L)
+{
+    int x1 = lua_tointeger(L, 1);
+    int y1 = lua_tointeger(L, 2);
+    int x2 = lua_tointeger(L, 3);
+    int y2 = lua_tointeger(L, 4);
+    int x3 = lua_tointeger(L, 5);
+    int y3 = lua_tointeger(L, 6);
+    int col = lua_tointeger(L, 7);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawTrifill(x1, y1, x2, y2, x3, y3, col);
+    
+    return 0;
+}
+
+//void circ(x,y,r,color)
+static int l_put_circ(lua_State* L)
+{
+    int x = lua_tointeger(L, 1);
+    int y = lua_tointeger(L, 2);
+    int r = lua_tointeger(L, 3);
+    int col = lua_tointeger(L, 4);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawCirc(x, y, r, col);
+    
+    return 0;
+}
+
+//void circfill(x,y,r,color)
+static int l_put_circfill(lua_State* L)
+{
+    int x = lua_tointeger(L, 1);
+    int y = lua_tointeger(L, 2);
+    int r = lua_tointeger(L, 3);
+    int col = lua_tointeger(L, 4);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawCircfill(x, y, r, col);
+    
+    return 0;
+}
+
+//void oval(x1,y1,w,h,color)
+static int l_put_oval(lua_State* L)
+{
+    int x = lua_tointeger(L, 1);
+    int y = lua_tointeger(L, 2);
+    int w = lua_tointeger(L, 3);
+    int h = lua_tointeger(L, 4);
+    int col = lua_tointeger(L, 5);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawEllipse(x, y, w, h, col);
+    
+    return 0;
+}
+
+//void ovalfill(x,y,w,h,color)
+static int l_put_ovalfill(lua_State* L)
+{
+    int x = lua_tointeger(L, 1);
+    int y = lua_tointeger(L, 2);
+    int w = lua_tointeger(L, 3);
+    int h = lua_tointeger(L, 4);
+    int col = lua_tointeger(L, 5);
+
+    lua_pop(L, 1);
+    col %= 16;
+    DrawEllipsefill(x, y, w, h, col);
+    
+    return 0;
+}
+
 //void text(str,x1,y1,color)
 static int l_put_text(lua_State* L)
 {
@@ -208,6 +288,8 @@ static int l_get_millis(lua_State* L)
     return 1;
 }
 
+//to be added: setspr spr temp keyp keyh keyr
+
 void RegisterCommands(lua_State* L)
 {
     lua_register(L, "reset", l_reset);
@@ -221,6 +303,11 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "rect", l_put_rect);
     lua_register(L, "rectfill", l_put_rectfill);
     lua_register(L, "tri", l_put_tri);
+    lua_register(L, "trifill", l_put_trifill);//to be implemented
+    lua_register(L, "circ", l_put_circ);
+    lua_register(L, "circfill", l_put_circfill);
+    lua_register(L, "oval", l_put_oval);
+    lua_register(L, "ovalfill", l_put_ovalfill);
     lua_register(L, "text", l_put_text);
     lua_register(L, "textfill", l_put_textfill);
     lua_register(L, "millis", l_get_millis);

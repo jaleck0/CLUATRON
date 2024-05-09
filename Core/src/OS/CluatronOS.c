@@ -16,8 +16,11 @@
 #include "../lua/lua.h" 
 #include "../lua/lualib.h"
 #include "../lua/lauxlib.h"
+#include "../lua/lualib.h"
 
 #define PROMPT "> "
+
+char* startCommand = "function start() read_input() if keyh(41) == 1 then error(\"stopped\",2) end end debug.sethook(start,\"l\")";
 
 uint16_t pico8pal[16] =
 {
@@ -59,8 +62,6 @@ uint16_t cgapal[16] =
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 255u, 255u)
 };
 
-
-
 void core1_entry() 
 {
     SetFont(font4x6);
@@ -82,6 +83,7 @@ void core1_entry()
 
     L = luaL_newstate();
     luaL_openlibs(L);
+    
     luaL_buffinit(L, &buf);
 
     RegisterCommands(L);
@@ -91,11 +93,19 @@ void core1_entry()
 
     uint8_t vis = 0;
     uint32_t mes = 0;
+    uint32_t t = 0;
+
+    luaL_addlstring(&buf, startCommand, strlen(startCommand));
+    luaL_pushresult(&buf);
+    const char *start = lua_tolstring(L, -1, &len);
+    status = luaL_loadbuffer(L, start, len, "startup");
+    status = lua_pcall(L, 0, 0, 0);
+    luaL_buffinit(L, &buf);
 
     for(;;)
     {
         ReadInputs();
-        
+
         ch = (char)KeyboardGiveLetter();
 
         if(ch == '\r') 
@@ -124,7 +134,7 @@ void core1_entry()
             TerminalPutString(PROMPT);
         }
         else if (KeyboardGetPressed(USB_ENTER))//if(ch == 0x04) 
-        { // Ctrl-D
+        {
             TerminalPutCharacter('\n');
             luaL_pushresult(&buf);
             const char *s = lua_tolstring(L, -1, &len);

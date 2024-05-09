@@ -62,6 +62,8 @@ void plot_point (int x, int y, int clr)
 
 void __time_critical_func(render_loop)(void)
 {
+    uint32_t t=0;
+
     while (true)
     {
         struct scanvideo_scanline_buffer *buffer = scanvideo_begin_scanline_generation (true);

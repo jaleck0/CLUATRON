@@ -1,6 +1,9 @@
 #include "Input.h"
 #include "bsp/board.h"
 #include "tusb.h"
+#include <string.h>
+
+#define KEYCOUNT 108
 
 uint8_t controllerInputs[2];
 uint8_t controllerConnected[2];
@@ -8,9 +11,9 @@ uint8_t keyboardConected = 0;
 uint8_t keyboardShift = 0;
 uint8_t keyboardCtrl = 0;
 
-uint8_t KeycodesPressed[256];
-uint8_t KeycodesHold[256];
-uint8_t KeycodesReleased[256];
+uint8_t KeycodesPressed[KEYCOUNT];
+uint8_t KeycodesHold[KEYCOUNT];
+uint8_t KeycodesReleased[KEYCOUNT];
 
 extern void cdc_app_task(void);
 
@@ -23,7 +26,7 @@ void InitInputs()
 
 void ReadInputs()
 {
-    for(uint8_t key = 0; key <= 127; key++)
+    for(uint8_t key = 0; key < KEYCOUNT; key++)
     {
         if (KeycodesPressed[key] == 1)
         {
@@ -36,7 +39,6 @@ void ReadInputs()
             KeycodesHold[key] = 0;
         }
     }
-    //putKeyoardChar = 0;
 
     tuh_task();
     cdc_app_task();
@@ -114,24 +116,4 @@ void KeyboardSetInputChar(char keyCode)
         keyCode = '\n';
     }
     putKeyoardChar = keyCode;
-}
-
-uint8_t ControllerGetHold(uint8_t controllerNumber, ControlInput input)
-{
-
-}
-
-uint8_t ControllerGetPressed(uint8_t controllerNumber, ControlInput input)
-{
-
-}
-
-uint8_t ControllerGetReleased(uint8_t controllerNumber, ControlInput input)
-{
-
-}
-
-uint8_t ControllerGetConnected(uint8_t controllerNumber)
-{
-
 }

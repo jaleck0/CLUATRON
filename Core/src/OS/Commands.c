@@ -288,7 +288,63 @@ static int l_get_millis(lua_State* L)
     return 1;
 }
 
-//to be added: setspr spr temp keyp keyh keyr
+
+//int init_input()
+static int l_set_inputinit(lua_State* L)
+{
+    
+    lua_pop(L, 1);
+    InitInputs();
+    
+    return 0;
+}
+
+//int read_input()
+static int l_get_input(lua_State* L)
+{
+    
+    lua_pop(L, 1);
+    ReadInputs();
+    
+    return 0;
+}
+
+//int keyp()
+static int l_get_keyp(lua_State* L)
+{
+    int input = lua_tointeger(L, 1);
+    int result = KeyboardGetPressed(input);
+    lua_pop(L, 1);
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+//int keyh()
+static int l_get_keyh(lua_State* L)
+{
+    int input = lua_tointeger(L, 1);
+    int result = KeyboardGetHold(input);
+    lua_pop(L, 1);
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+//int keyr()
+static int l_get_keyr(lua_State* L)
+{
+    int input = lua_tointeger(L, 1);
+    int result = KeyboardGetReleased(input);
+    lua_pop(L, 1);
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+
+
+//to be added: setspr spr temp 
 
 void RegisterCommands(lua_State* L)
 {
@@ -303,7 +359,7 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "rect", l_put_rect);
     lua_register(L, "rectfill", l_put_rectfill);
     lua_register(L, "tri", l_put_tri);
-    lua_register(L, "trifill", l_put_trifill);//to be implemented
+    //lua_register(L, "trifill", l_put_trifill);//to be implemented
     lua_register(L, "circ", l_put_circ);
     lua_register(L, "circfill", l_put_circfill);
     lua_register(L, "oval", l_put_oval);
@@ -312,4 +368,9 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "textfill", l_put_textfill);
     lua_register(L, "millis", l_get_millis);
     lua_register(L, "rgb", l_get_rgbcolor);
+    lua_register(L, "init_input", l_set_inputinit);
+    lua_register(L, "read_input", l_get_input);
+    lua_register(L, "keyp", l_get_keyp);
+    lua_register(L, "keyh", l_get_keyh);
+    lua_register(L, "keyr", l_get_keyr);
 }

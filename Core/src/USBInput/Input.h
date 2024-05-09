@@ -3,18 +3,6 @@
 
 #include "pico/stdlib.h"
 
-typedef enum 
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    START,
-    SELECT,
-    A_BUTTON,
-    B_BUTTON
-} ControlInput;
-
 typedef enum
 {
     USB_NULL,
@@ -140,10 +128,5 @@ void KeyboardSetKeyPressed(KeyboardInput keyCode);
 void KeyboardSetKeyReleased(KeyboardInput keyCode);
 void KeyboardSetModifiers(uint8_t setShift, uint8_t setCtrl);
 void KeyboardSetInputChar(char keyCode);
-
-uint8_t ControllerGetHold(uint8_t controllerNumber, ControlInput input);
-uint8_t ControllerGetPressed(uint8_t controllerNumber, ControlInput input);
-uint8_t ControllerGetReleased(uint8_t controllerNumber, ControlInput input);
-uint8_t ControllerGetConnected(uint8_t controllerNumber);
 
 #endif

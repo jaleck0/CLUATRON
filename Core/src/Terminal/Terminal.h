@@ -22,4 +22,8 @@ extern void TerminalPutString(char* textString);
 
 extern void TerminalPutNumber(int64_t num);
 
+extern void TerminalPutCommand(char* command);
+
+extern void TerminalMove(int32_t dx);
+
 #endif

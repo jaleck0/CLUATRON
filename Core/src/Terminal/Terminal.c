@@ -93,9 +93,24 @@ void TerminalPutString(char* textString)
     }
 }
 
-extern void TerminalPutNumber(int64_t num)
+void TerminalPutNumber(int64_t num)
 {
     char snum[64];
     itoa(num, snum, 10);
     TerminalPutString(snum);
+}
+
+void TerminalPutCommand(char* command)
+{
+    textX = 0;
+    DrawRectfill(0, textY, 320, 6, backCol);
+    TerminalPutString("> ");
+    TerminalPutString(command);
+}
+
+void TerminalMove(int32_t dx)
+{
+    RemoveWritePoint();
+    textX += dx*4;
+    DrawWritePoint();
 }

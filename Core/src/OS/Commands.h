@@ -5,6 +5,7 @@
 #include "../lua/lualib.h"
 #include "../lua/lauxlib.h"
 
+extern void RegisterConstants(lua_State* L);
 extern void RegisterCommands(lua_State* L);
 
 #endif

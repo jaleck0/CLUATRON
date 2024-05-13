@@ -342,7 +342,11 @@ static int l_get_keyr(lua_State* L)
     return 1;
 }
 
-
+void RegisterConstants(lua_State* L)
+{
+    lua_pushnumber(L, (lua_Number)l_mathop(3.14));
+    lua_setfield(L, 2, "popo");
+}
 
 //to be added: setspr spr temp 
 
@@ -352,7 +356,7 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "bootsel", l_bootsel);
     lua_register(L, "pcol", l_set_printcolor);
     lua_register(L, "bcol", l_set_backcolor);
-    lua_register(L, "dot", l_put_pixel);
+    lua_register(L, "dot", l_put_pixel);   
     lua_register(L, "pal", l_set_palindexcolor);
     lua_register(L, "cls", l_clearscreen);
     lua_register(L, "line", l_put_line);

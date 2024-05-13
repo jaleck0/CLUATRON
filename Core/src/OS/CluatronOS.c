@@ -87,8 +87,17 @@ void core1_entry()
     luaL_buffinit(L, &buf);
 
     RegisterCommands(L);
+    //RegisterConstants(L);
+    /*
+    type help() for more information
 
-    TerminalPutString("\n ctrl-c  clear buffer\n ctrl-l  clear screen\n enter   execute buffer\n\n");
+    ctrl-c      stop program 
+    ctrl-l      clear screen
+    ctrl-enter  run current code
+    enter       run command
+    esc         pause program loop
+    */
+    TerminalPutString("\n ctrl-c  clear buffer\n ctrl-l  clear screen\n enter   execute buffer\n esc     stop program\n\n");
     TerminalPutString(PROMPT);
 
     uint8_t vis = 0;
@@ -102,6 +111,10 @@ void core1_entry()
     status = lua_pcall(L, 0, 0, 0);
     luaL_buffinit(L, &buf);
 
+    char command[10][78] = "";
+    uint32_t precommandIndex = 0;
+    uint32_t commandPos = 0;
+
     for(;;)
     {
         ReadInputs();
@@ -113,32 +126,52 @@ void core1_entry()
             ch = '\n';
         }
 
-        //if(ch == 0x7F || ch == 0x08) 
         if (KeyboardGetPressed(USB_BACKSPACE))
-        { // DEL or BS
-            TerminalBackspace();
-            if(luaL_bufflen(&buf) > 0) 
+        {
+            if (strlen(command) > 0 && commandPos > 0)
             {
-                luaL_buffsub(&buf, 1);
+                strcpy(command+commandPos-1,command+commandPos);
+                commandPos--;
+                TerminalPutCommand(command);
+                TerminalMove(commandPos-strlen(command));
             }
         }
-        else if (KeyboardGetPressed(USB_L) && KeyboardGetCtrl())//if(ch == 0x0C) 
-        { // Ctrl-L (ANSI clear screen)
+        if (KeyboardGetPressed(USB_DELETE))
+        {
+            if (command[commandPos] != '\0')
+            {
+                memmove(command+commandPos,command+commandPos+1,strlen(command+commandPos)+1);
+                TerminalPutCommand(command);
+                TerminalMove(commandPos-strlen(command));
+            }
+        }
+        else if (KeyboardGetPressed(USB_L) && KeyboardGetCtrl())
+        {
             TerminalClear();
             TerminalPutString(PROMPT);
         }
-        else if (KeyboardGetPressed(USB_C) && KeyboardGetCtrl())//if(ch == 0x03) 
-        { // Ctrl-C (clear buffer without executing)
-            luaL_buffinit(L, &buf);
-            TerminalPutString("\n");
-            TerminalPutString(PROMPT);
+        else if (KeyboardGetPressed(USB_LEFT) && commandPos > 0)
+        {
+            commandPos--;
+            TerminalMove(-1);
         }
-        else if (KeyboardGetPressed(USB_ENTER))//if(ch == 0x04) 
+        else if (KeyboardGetPressed(USB_RIGHT) && commandPos < strlen(command))
+        {
+            commandPos++;
+            TerminalMove(1);
+        }
+        else if (KeyboardGetPressed(USB_ENTER))
         {
             TerminalPutCharacter('\n');
+            
+            buf.b = command;
+            buf.n = strlen(command);
             luaL_pushresult(&buf);
             const char *s = lua_tolstring(L, -1, &len);
-            status = luaL_loadbuffer(L, s, len, "cluatron");
+            status = luaL_loadbuffer(L, s, len, "command");
+
+            command[0]='\0';
+            commandPos=0;
 
             if(status != LUA_OK) 
             {
@@ -165,10 +198,16 @@ void core1_entry()
             luaL_buffinit(L, &buf);
             TerminalPutString(PROMPT);
         }
-        else if((ch >= 0x20 && ch < 0x7F) || ch == '\t' || ch == '\n') 
-        { // [ \t\na-zA-z]
-            TerminalPutCharacter(ch);
-            luaL_addchar(&buf, ch);
+        else if((ch >= 0x20 && ch < 0x7F)) 
+        { 
+            if (strlen(command) < 77)
+            {   
+                memmove(command+commandPos+1,command+commandPos,strlen(command+commandPos)+1);
+                command[commandPos] = ch;
+                commandPos++;
+                TerminalPutCommand(command);
+                TerminalMove(commandPos-strlen(command));
+            }
         }
 
         if (KeyboardGetPressed(USB_F1))

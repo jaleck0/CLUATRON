@@ -94,11 +94,11 @@ void tuh_cdc_mount_cb(uint8_t idx)
   tuh_cdc_itf_get_info(idx, &itf_info);
 
   //printf("CDC Interface is mounted: address = %u, itf_num = %u\r\n", itf_info.daddr, itf_info.bInterfaceNumber);
-  TerminalPutString("CDC Interface is mounted: address = ");
-  TerminalPutNumber(itf_info.daddr);
-  TerminalPutString(", itf_num = ");
-  TerminalPutNumber(itf_info.bInterfaceNumber);
-  TerminalPutString("\r\n");
+  //TerminalPutString("CDC Interface is mounted: address = ");
+  //TerminalPutNumber(itf_info.daddr);
+  //TerminalPutString(", itf_num = ");
+  //TerminalPutNumber(itf_info.bInterfaceNumber);
+  //TerminalPutString("\r\n");
 
 #ifdef CFG_TUH_CDC_LINE_CODING_ON_ENUM
   // CFG_TUH_CDC_LINE_CODING_ON_ENUM must be defined for line coding is set by tinyusb in enumeration
@@ -118,9 +118,11 @@ void tuh_cdc_umount_cb(uint8_t idx)
   tuh_cdc_itf_get_info(idx, &itf_info);
 
   //printf("CDC Interface is unmounted: address = %u, itf_num = %u\r\n", itf_info.daddr, itf_info.bInterfaceNumber);
+  /*
   TerminalPutString("CDC Interface is unmounted: address = ");
   TerminalPutNumber(itf_info.daddr);
   TerminalPutString(", itf_num = ");
   TerminalPutNumber(itf_info.bInterfaceNumber);
   TerminalPutString("\r\n");
+  */
 }

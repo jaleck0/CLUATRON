@@ -69,20 +69,24 @@ void hid_app_task(void)
 void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_report, uint16_t desc_len)
 {
   //printf("HID device address = %d, instance = %d is mounted\r\n", dev_addr, instance);
+  /*
   TerminalPutString("HID device address = ");
   TerminalPutNumber(dev_addr);
   TerminalPutString(", instance = ");
   TerminalPutNumber(instance);
   TerminalPutString(" is mounted\r\n");
+  */
   // Interface protocol (hid_interface_protocol_enum_t)
   char* protocol_str[] = { "None", "Keyboard", "Mouse" };
   uint8_t itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
   KeyboardSetConnected();
 
   //printf("HID Interface Protocol = %s\r\n", protocol_str[itf_protocol]);
+  /*
   TerminalPutString("HID Interface Protocol = ");
   TerminalPutString(protocol_str[itf_protocol]);
   TerminalPutString("\r\n");
+  */
 
   // By default host stack will use activate boot protocol on supported interface.
   // Therefore for this simple example, we only need to parse generic report descriptor (with built-in parser)
@@ -97,7 +101,7 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
   if ( !tuh_hid_receive_report(dev_addr, instance) )
   {
     //printf("Error: cannot request to receive report\r\n");
-    TerminalPutString("Error: cannot request to receive report\r\n");
+    //TerminalPutString("Error: cannot request to receive report\r\n");
   }
 }
 
@@ -105,11 +109,13 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
 void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance)
 {
   //printf("HID device address = %d, instance = %d is unmounted\r\n", dev_addr, instance);
+  /*
   TerminalPutString("HID device address = ");
   TerminalPutNumber(dev_addr);
   TerminalPutString(", instance = ");
   TerminalPutNumber(instance);
   TerminalPutString(" is unmounted\r\n");
+  */
   KeyboardSetDisconnected();
 }
 
@@ -139,7 +145,7 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
   // continue to request to receive report
   if ( !tuh_hid_receive_report(dev_addr, instance) )
   {
-    TerminalPutString("Error: cannot request to receive report\r\n");
+    //TerminalPutString("Error: cannot request to receive report\r\n");
   }
 }
 
@@ -305,7 +311,7 @@ static void process_generic_report(uint8_t dev_addr, uint8_t instance, uint8_t c
 
   if (!rpt_info)
   {
-    TerminalPutString("Couldn't find the report info for this report !\r\n");
+    //TerminalPutString("Couldn't find the report info for this report !\r\n");
     return;
   }
 

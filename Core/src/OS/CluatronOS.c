@@ -22,6 +22,15 @@
 
 char* startCommand = "function start() read_input() if keyh(41) == 1 then error(\"stopped\",2) end end debug.sethook(start,\"l\")";
 
+typedef enum
+{
+    SHELL,
+    CET
+} Program;
+
+Program currentProgram = SHELL;
+
+
 uint16_t pico8pal[16] =
 {
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(  0u,   0u,   0u),
@@ -111,9 +120,15 @@ void core1_entry()
     status = lua_pcall(L, 0, 0, 0);
     luaL_buffinit(L, &buf);
 
-    char command[10][78] = "";
-    uint32_t precommandIndex = 0;
+    char command[78] = "";
     uint32_t commandPos = 0;
+
+    char commandHistory[10][78] = {"","","","","","","","","",""};
+    int32_t commandWriteIndex = 0;
+    int32_t commandSelectIndex = 0;
+
+    char file[32768] = "";
+    uint32_t filePos = 0;
 
     for(;;)
     {
@@ -126,89 +141,233 @@ void core1_entry()
             ch = '\n';
         }
 
-        if (KeyboardGetPressed(USB_BACKSPACE))
+        switch (currentProgram)
         {
-            if (strlen(command) > 0 && commandPos > 0)
+        case SHELL:
+            if (KeyboardGetPressed(USB_BACKSPACE))
             {
-                strcpy(command+commandPos-1,command+commandPos);
-                commandPos--;
-                TerminalPutCommand(command);
-                TerminalMove(commandPos-strlen(command));
+                if (strlen(command) > 0 && commandPos > 0)
+                {
+                    strcpy(command+commandPos-1,command+commandPos);
+                    commandPos--;
+                    TerminalPutCommand(command);
+                    TerminalMove(commandPos-strlen(command));
+                }
             }
-        }
-        if (KeyboardGetPressed(USB_DELETE))
-        {
-            if (command[commandPos] != '\0')
+            if (KeyboardGetPressed(USB_DELETE))
             {
-                memmove(command+commandPos,command+commandPos+1,strlen(command+commandPos)+1);
-                TerminalPutCommand(command);
-                TerminalMove(commandPos-strlen(command));
+                if (command[commandPos] != '\0')
+                {
+                    memmove(command+commandPos,command+commandPos+1,strlen(command+commandPos)+1);
+                    TerminalPutCommand(command);
+                    TerminalMove(commandPos-strlen(command));
+                }
             }
-        }
-        else if (KeyboardGetPressed(USB_L) && KeyboardGetCtrl())
-        {
-            TerminalClear();
-            TerminalPutString(PROMPT);
-        }
-        else if (KeyboardGetPressed(USB_LEFT) && commandPos > 0)
-        {
-            commandPos--;
-            TerminalMove(-1);
-        }
-        else if (KeyboardGetPressed(USB_RIGHT) && commandPos < strlen(command))
-        {
-            commandPos++;
-            TerminalMove(1);
-        }
-        else if (KeyboardGetPressed(USB_ENTER))
-        {
-            TerminalPutCharacter('\n');
-            
-            buf.b = command;
-            buf.n = strlen(command);
-            luaL_pushresult(&buf);
-            const char *s = lua_tolstring(L, -1, &len);
-            status = luaL_loadbuffer(L, s, len, "command");
+            else if (KeyboardGetPressed(USB_L) && KeyboardGetCtrl())
+            {
+                TerminalClear();
+                TerminalPutString(PROMPT);
+            }
+            else if (KeyboardGetPressed(USB_E) && KeyboardGetCtrl())
+            {
+                TerminalPutCharacter('\n');
+                buf.b = file;
+                buf.n = strlen(file);
+                luaL_pushresult(&buf);
+                const char *s = lua_tolstring(L, -1, &len);
+                status = luaL_loadbuffer(L, s, len, "command");
 
-            command[0]='\0';
-            commandPos=0;
-
-            if(status != LUA_OK) 
-            {
-                const char *msg = lua_tostring(L, -1);
-                TerminalPutString("parse error: ");
-                TerminalPutString(msg);
-                TerminalPutString("\n");
-            }
-            else
-            {
-                status = lua_pcall(L, 0, 0, 0);
+                
+                filePos=0;
 
                 if(status != LUA_OK) 
                 {
                     const char *msg = lua_tostring(L, -1);
-                    TerminalPutString("execute error: ");
+                    TerminalPutString("parse error: ");
                     TerminalPutString(msg);
                     TerminalPutString("\n");
-                    //lua_writestringerror("execute error: %s\n", msg);
+                }
+                else
+                {
+                    status = lua_pcall(L, 0, 0, 0);
+
+                    if(status != LUA_OK) 
+                    {
+                        const char *msg = lua_tostring(L, -1);
+                        TerminalPutString("execute error: ");
+                        TerminalPutString(msg);
+                        TerminalPutString("\n");
+                        //lua_writestringerror("execute error: %s\n", msg);
+                    }
+                }
+
+                lua_pop(L, 1);
+                luaL_buffinit(L, &buf);
+                TerminalPutString(PROMPT);
+            }
+            else if (KeyboardGetPressed(USB_LEFT) && commandPos > 0)
+            {
+                commandPos--;
+                TerminalMove(-1);
+            }
+            else if (KeyboardGetPressed(USB_RIGHT) && commandPos < strlen(command))
+            {
+                commandPos++;
+                TerminalMove(1);
+            }
+            else if (KeyboardGetPressed(USB_UP))
+            {
+                commandSelectIndex--;
+
+                if (commandSelectIndex < 0) 
+                {
+                    commandSelectIndex = 9;
+                }
+
+                if (commandHistory[commandSelectIndex][0] == '\0')
+                {
+                    commandSelectIndex++;
+                    commandSelectIndex %= 10;
+                }
+
+                strcpy(command, commandHistory[commandSelectIndex]);
+                TerminalPutCommand(command);
+                commandPos = strlen(command);
+            }
+            else if (KeyboardGetPressed(USB_DOWN))
+            {
+                if (commandSelectIndex != commandWriteIndex)
+                {            
+                    commandSelectIndex++;
+                }
+
+                if (commandSelectIndex > 9) 
+                {
+                    commandSelectIndex = 0;
+                }            
+
+                strcpy(command, commandHistory[commandSelectIndex]);
+                TerminalPutCommand(command);
+                commandPos = strlen(command);
+            }
+            else if (KeyboardGetPressed(USB_ENTER))
+            {
+                TerminalPutCharacter('\n');
+                
+                strcpy( commandHistory[commandWriteIndex], command);
+                commandWriteIndex++;
+                commandWriteIndex %= 10;
+                commandSelectIndex = commandWriteIndex;
+
+                buf.b = command;
+                buf.n = strlen(command);
+                luaL_pushresult(&buf);
+                const char *s = lua_tolstring(L, -1, &len);
+                status = luaL_loadbuffer(L, s, len, "command");
+
+                command[0]='\0';
+                commandPos=0;
+
+                if(status != LUA_OK) 
+                {
+                    const char *msg = lua_tostring(L, -1);
+                    TerminalPutString("parse error: ");
+                    TerminalPutString(msg);
+                    TerminalPutString("\n");
+                }
+                else
+                {
+                    status = lua_pcall(L, 0, 0, 0);
+
+                    if(status != LUA_OK) 
+                    {
+                        const char *msg = lua_tostring(L, -1);
+                        TerminalPutString("execute error: ");
+                        TerminalPutString(msg);
+                        TerminalPutString("\n");
+                        //lua_writestringerror("execute error: %s\n", msg);
+                    }
+                }
+
+                lua_pop(L, 1);
+                luaL_buffinit(L, &buf);
+                TerminalPutString(PROMPT);
+            }
+            else if((ch >= 0x20 && ch < 0x7F)) 
+            { 
+                if (strlen(command) < 77)
+                {   
+                    memmove(command+commandPos+1,command+commandPos,strlen(command+commandPos)+1);
+                    command[commandPos] = ch;
+                    commandPos++;
+                    TerminalPutCommand(command);
+                    TerminalMove(commandPos-strlen(command));
                 }
             }
-
-            lua_pop(L, 1);
-            luaL_buffinit(L, &buf);
-            TerminalPutString(PROMPT);
-        }
-        else if((ch >= 0x20 && ch < 0x7F)) 
-        { 
-            if (strlen(command) < 77)
-            {   
-                memmove(command+commandPos+1,command+commandPos,strlen(command+commandPos)+1);
-                command[commandPos] = ch;
-                commandPos++;
-                TerminalPutCommand(command);
-                TerminalMove(commandPos-strlen(command));
+            break;
+        case CET:
+            
+            if (KeyboardGetPressed(USB_BACKSPACE))
+            {
+                if (strlen(file) > 0 && filePos > 0)
+                {
+                    strcpy(file+filePos-1,file+filePos);
+                    filePos--;
+                    TerminalClear();
+                    TerminalPutString(file);
+                    TerminalMove(filePos-strlen(file));
+                }
             }
+            if (KeyboardGetPressed(USB_DELETE))
+            {
+                if (file[filePos] != '\0')
+                {
+                    memmove(file+filePos,file+filePos+1,strlen(file+filePos)+1);
+                    TerminalClear();
+                    TerminalPutString(file);
+                    TerminalMove(filePos-strlen(file));
+                }
+            }
+            else if (KeyboardGetPressed(USB_LEFT) && filePos > 0)
+            {
+                filePos--;
+                TerminalMove(-1);
+            }
+            else if (KeyboardGetPressed(USB_RIGHT) && filePos < strlen(file))
+            {
+                filePos++;
+                TerminalMove(1);
+            }
+            else if (KeyboardGetPressed(USB_UP))
+            {
+               
+            }
+            else if (KeyboardGetPressed(USB_DOWN))
+            {
+                
+            }
+            else if (KeyboardGetPressed(USB_ENTER))
+            {
+            
+            }
+            else if((ch >= 0x20 && ch < 0x7F)) 
+            { 
+                if (strlen(file) < 32767)
+                {   
+                    memmove(file+filePos+1,file+filePos,strlen(file+filePos)+1);
+                    file[filePos] = ch;
+                    filePos++;
+                    TerminalClear();
+                    TerminalPutString(file);
+                    TerminalMove(filePos-strlen(file));
+                }
+            }
+            break;
+        default:
+            break;
         }
+
+        
 
         if (KeyboardGetPressed(USB_F1))
         {
@@ -217,6 +376,13 @@ void core1_entry()
                 ChangeColor( i, pico8pal[i]);
             }
             set_colours();
+            cls(1);
+            currentProgram = SHELL;
+            TerminalSetPosition(0,0);
+            TerminalPutCommand(command);
+            commandPos=strlen(command);
+            SetTextColor(11);
+            
         }
 
         if (KeyboardGetPressed(USB_F2))
@@ -226,6 +392,14 @@ void core1_entry()
                 ChangeColor( i, cgapal[i]);
             }
             set_colours();
+            cls(1);
+            currentProgram = CET;
+            TerminalSetPosition(0,0);
+            TerminalClear();
+            TerminalPutString(file);
+            filePos=strlen(file);
+            SetTextColor(15);
+            
         }
         
         if (to_ms_since_boot(get_absolute_time()) - mes >= 500)

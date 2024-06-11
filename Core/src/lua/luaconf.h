@@ -122,7 +122,7 @@
 /*
 @@ LUA_32BITS enables Lua with 32-bit integers and 32-bit floats.
 */
-#define LUA_32BITS	1
+#define LUA_32BITS	0
 
 
 /*
@@ -468,7 +468,7 @@
 #define LUAI_UACNUMBER	double
 
 #define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.14g"
+#define LUA_NUMBER_FMT		"%.10g"
 
 #define l_mathop(op)		op
 

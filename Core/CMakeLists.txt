@@ -68,6 +68,9 @@ target_compile_definitions(cluatron PUBLIC -DPICO_SCANVIDEO_MAX_SCANLINE_BUFFER_
 pico_enable_stdio_uart(cluatron 0)
 pico_enable_stdio_usb(cluatron 0)
 
+pico_set_float_implementation(cluatron pico)
+pico_set_double_implementation(cluatron compiler) #this seems to improve stuff so far
+
 pico_add_extra_outputs(cluatron)
 
 target_link_libraries(cluatron PUBLIC

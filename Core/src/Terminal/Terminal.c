@@ -83,7 +83,7 @@ void TerminalPutCharacter(char textChar)
     }
 }
 
-void TerminalPutString(char* textString)
+void TerminalPutString(const char* textString)
 {
     uint32_t length = strlen(textString);
 

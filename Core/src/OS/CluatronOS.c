@@ -106,7 +106,7 @@ void core1_entry()
     enter       run command
     esc         pause program loop
     */
-    TerminalPutString("\n ctrl-c  clear buffer\n ctrl-l  clear screen\n enter   execute buffer\n esc     stop program\n\n");
+    TerminalPutString("\n ctrl-e  execute file\n ctrl-l  clear screen\n enter   execute buffer\n esc     stop program\n\n");
     TerminalPutString(PROMPT);
 
     uint8_t vis = 0;

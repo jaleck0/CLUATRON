@@ -23,6 +23,9 @@ add_executable(cluatron
 	src/USBInput/cdc_app.c
 	src/USBInput/Input.c
 	src/OS/Commands.c
+    src/OS/SharedOS.c
+    src/OS/CluaShell.c 
+    src/OS/CluatronEditingTool.c 
     src/OS/CluatronOS.c
 	src/Graphics/font4x6.c
 	src/lua/lapi.c
@@ -69,7 +72,7 @@ pico_enable_stdio_uart(cluatron 0)
 pico_enable_stdio_usb(cluatron 0)
 
 pico_set_float_implementation(cluatron pico)
-pico_set_double_implementation(cluatron compiler) #this seems to improve stuff so far
+pico_set_double_implementation(cluatron compiler) #the solution to the past floating point issues
 
 pico_add_extra_outputs(cluatron)
 

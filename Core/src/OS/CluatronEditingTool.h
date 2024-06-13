@@ -2,6 +2,9 @@
 #define CET_H
 
 void InitCET();
-void updateCET();
+
+void StartCET();
+
+void RunCET();
 
 #endif

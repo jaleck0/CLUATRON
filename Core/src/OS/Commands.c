@@ -377,4 +377,5 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "keyp", l_get_keyp);
     lua_register(L, "keyh", l_get_keyh);
     lua_register(L, "keyr", l_get_keyr);
+
 }

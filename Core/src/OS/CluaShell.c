@@ -72,6 +72,11 @@ void RunShell()
             TerminalMove(commandPos - strlen(command));
         }
     }
+    else if (KeyboardGetPressed(USB_T) && KeyboardGetCtrl())
+    {
+        TerminalPutString(file);
+        TerminalPutString(PROMPT);
+    }
     else if (KeyboardGetPressed(USB_L) && KeyboardGetCtrl())
     {
         TerminalClear();

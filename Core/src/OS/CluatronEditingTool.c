@@ -66,10 +66,7 @@ void RunCET()
     else if (KeyboardGetPressed(USB_DOWN))
     {
     }
-    else if (KeyboardGetPressed(USB_ENTER))
-    {
-    }
-    else if ((ch >= 0x20 && ch < 0x7F))
+    else if ((ch >= 0x20 && ch < 0x7F) || ch == '\n')
     {
         if (strlen(file) < 32767)
         {

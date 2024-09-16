@@ -21,11 +21,14 @@ char putKeyoardChar = 0;
 
 void InitInputs()
 {
-    tuh_init(BOARD_TUH_RHPORT);
+    //tusb_init();
+    //tuh_init(BOARD_TUH_RHPORT);
+    //
 }
 
 void ReadInputs()
 {
+    
     for(uint8_t key = 0; key < KEYCOUNT; key++)
     {
         if (KeycodesPressed[key] == 1)
@@ -40,8 +43,8 @@ void ReadInputs()
         }
     }
 
-    tuh_task();
-    cdc_app_task();
+    tuh_task(); 
+    //cdc_app_task(); unneccesary
 }
 
 uint8_t KeyboardGetHold(KeyboardInput input)

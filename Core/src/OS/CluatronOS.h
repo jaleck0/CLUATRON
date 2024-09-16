@@ -8,6 +8,6 @@
 #include "pico/multicore.h"
 #include "hardware/clocks.h"
 
-extern void core1_entry();
+extern void RunCluatronOS();
 
 #endif

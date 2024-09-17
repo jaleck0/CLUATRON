@@ -342,6 +342,33 @@ static int l_get_keyr(lua_State* L)
     return 1;
 }
 
+//int mdx()
+static int l_get_mdx(lua_State* L)
+{
+    int result = MouseGetXSpeed();
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+//int mdy()
+static int l_get_mdy(lua_State* L)
+{
+    int result = MouseGetYSpeed();
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+//int mscr()
+static int l_get_mscr(lua_State* L)
+{
+    int result = MouseGetSSpeed();
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
 void RegisterConstants(lua_State* L)
 {
     lua_pushnumber(L, (lua_Number)l_mathop(3.14));
@@ -377,5 +404,7 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "keyp", l_get_keyp);
     lua_register(L, "keyh", l_get_keyh);
     lua_register(L, "keyr", l_get_keyr);
-
+    lua_register(L, "mdx", l_get_mdx);
+    lua_register(L, "mdy", l_get_mdy);
+    lua_register(L, "mscr", l_get_mscr);
 }

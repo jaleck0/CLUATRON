@@ -171,12 +171,6 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
   static hid_keyboard_report_t prev_report = { 0, 0, {0} }; // previous report to check key released
   uint8_t changed = 0;
 
-  //------------- example code ignore control (non-printable) key affects -------------//
-  //bool const is_shift = report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
-  //bool const is_ctrl = report->modifier & (KEYBOARD_MODIFIER_LEFTCTRL | KEYBOARD_MODIFIER_RIGHTCTRL);
-  //uint8_t ch = keycode2ascii[report->keycode[0]][is_shift ? 1 : 0];
-  //KeyboardSetInputChar(ch);
-  
   for(uint8_t i=0; i<6; i++)
   {
     if ( report->keycode[i] )
@@ -196,26 +190,17 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
         if (changed == 0)
         {
           uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
-          //TerminalPutCharacter(ch);
           KeyboardSetInputChar(ch);
           changed = 1;
         }
-        //;
-        //putchar(ch)
-        //TerminalPutNumber(report->keycode[i]);
-        //TerminalPutCharacter(ch);
-        //if ( ch == '\r' ) TerminalPutCharacter('\n'); // added new line for enter key
-
-        //fflush(stdout); // flush right away, else nanolib will wait for newline
-      //}
     }
-    //for(uint8_t key = 0; key <= 127; key++)
-    //{
-    //  if (KeyboardGetHold(key) == 1 && !(find_key_in_report(report, key)))
-    //  {
-    //    KeyboardSetKeyReleased(key);
-    //  }
-    //}
+    for(uint8_t key = 0; key <= 127; key++)
+    {
+      if (KeyboardGetHold(key) == 1 && !(find_key_in_report(report, key)))
+      {
+        KeyboardSetKeyReleased(key);
+      }
+    }
     
     // TODO example skips key released
   }
@@ -278,7 +263,9 @@ static void process_mouse_report(hid_mouse_report_t const * report)
   //}
 
   //------------- cursor movement -------------//
-  cursor_movement(report->x, report->y, report->wheel);
+  //cursor_movement(report->x, report->y, report->wheel);
+  MouseSetMovement(report->x, report->y, report->wheel);
+
 }
 
 //--------------------------------------------------------------------+

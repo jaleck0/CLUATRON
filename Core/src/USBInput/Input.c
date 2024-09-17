@@ -15,6 +15,10 @@ uint8_t KeycodesPressed[KEYCOUNT];
 uint8_t KeycodesHold[KEYCOUNT];
 uint8_t KeycodesReleased[KEYCOUNT];
 
+int8_t MouseXSpeed = 0;
+int8_t MouseYSpeed = 0;
+int8_t MouseSSpeed = 0;
+
 extern void cdc_app_task(void);
 
 char putKeyoardChar = 0;
@@ -74,6 +78,36 @@ char KeyboardGiveLetter()
     return returnChar;
 }
 
+int8_t MouseGetXSpeed()
+{
+    return MouseXSpeed;
+}
+
+int8_t MouseGetYSpeed()
+{
+    return MouseYSpeed;
+}
+
+int8_t MouseGetSSpeed()
+{
+    return MouseSSpeed;
+}
+
+uint8_t MouseGetHold(MouseInput input)
+{
+
+}
+
+uint8_t MouseGetPressed(MouseInput input)
+{
+
+}
+
+uint8_t MouseGetReleased(MouseInput input)
+{
+
+}
+
 void KeyboardSetConnected()
 {
     keyboardConected = 1;
@@ -119,4 +153,21 @@ void KeyboardSetInputChar(char keyCode)
         keyCode = '\n';
     }
     putKeyoardChar = keyCode;
+}
+
+void MouseSetMovement(int8_t x, int8_t y, int8_t wheel)
+{
+    MouseXSpeed = x;
+    MouseYSpeed = y;
+    MouseSSpeed = wheel;
+}
+
+void MouseSetKeyPressed(MouseInput keyCode)
+{
+
+}
+
+void MouseSetKeyReleased(MouseInput keyCode)
+{
+
 }

@@ -109,6 +109,13 @@ typedef enum
     USB_KP_APP
 } KeyboardInput;
 
+typedef enum 
+{
+    USB_MOUSEB_LEFT,
+    USB_MOUSEB_MIDDLE,
+    USB_MOUSEB_RIGHT
+} MouseInput;
+
 
 
 void InitInputs();
@@ -121,6 +128,12 @@ uint8_t KeyboardGetConnected();
 uint8_t KeyboardGetShift();
 uint8_t KeyboardGetCtrl();
 char KeyboardGiveLetter();
+int8_t MouseGetXSpeed();
+int8_t MouseGetYSpeed();
+int8_t MouseGetSSpeed();
+uint8_t MouseGetHold(MouseInput input);
+uint8_t MouseGetPressed(MouseInput input);
+uint8_t MouseGetReleased(MouseInput input);
 
 void KeyboardSetConnected();
 void KeyboardSetDisconnected();
@@ -128,5 +141,8 @@ void KeyboardSetKeyPressed(KeyboardInput keyCode);
 void KeyboardSetKeyReleased(KeyboardInput keyCode);
 void KeyboardSetModifiers(uint8_t setShift, uint8_t setCtrl);
 void KeyboardSetInputChar(char keyCode);
+void MouseSetMovement(int8_t x, int8_t y, int8_t wheel);
+void MouseSetKeyPressed(MouseInput keyCode);
+void MouseSetKeyReleased(MouseInput keyCode);
 
 #endif

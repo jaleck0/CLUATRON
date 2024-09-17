@@ -22,18 +22,10 @@ void RunCluatronOS()
     SetFont(font4x6);
     board_init();
 
-    
-
-
     cls(BACKCOL);
     SetTextColor(TEXTCOL);
     TerminalSetBackCol(BACKCOL);
     TerminalPutString("                        ---CLUATRON OS ~ Jalecko 2024---\n");
-
-    //InitInputs();
-    
-
-    stdio_init_all();
     
     /*
     type help() for more information
@@ -56,8 +48,6 @@ void RunCluatronOS()
 
     for(;;)
     {
-        
-
         switch (currentProgram)
         {
         case SHELL:

@@ -142,7 +142,6 @@ void KeyboardSetKeyReleased(KeyboardInput keyCode);
 void KeyboardSetModifiers(uint8_t setShift, uint8_t setCtrl);
 void KeyboardSetInputChar(char keyCode);
 void MouseSetMovement(int8_t x, int8_t y, int8_t wheel);
-void MouseSetKeyPressed(MouseInput keyCode);
-void MouseSetKeyReleased(MouseInput keyCode);
+void MouseSetButtons(uint8_t lb, uint8_t mb, uint8_t rb, uint8_t plb, uint8_t pmb, uint8_t prb);
 
 #endif

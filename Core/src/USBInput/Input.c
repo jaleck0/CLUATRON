@@ -3,7 +3,9 @@
 #include "tusb.h"
 #include <string.h>
 
+
 #define KEYCOUNT 108
+#define MBCOUNT 3
 
 uint8_t controllerInputs[2];
 uint8_t controllerConnected[2];
@@ -14,6 +16,10 @@ uint8_t keyboardCtrl = 0;
 uint8_t KeycodesPressed[KEYCOUNT];
 uint8_t KeycodesHold[KEYCOUNT];
 uint8_t KeycodesReleased[KEYCOUNT];
+
+uint8_t MouseBPressed[MBCOUNT];
+uint8_t MouseBHold[MBCOUNT];
+uint8_t MouseBReleased[MBCOUNT];
 
 int8_t MouseXSpeed = 0;
 int8_t MouseYSpeed = 0;
@@ -26,13 +32,26 @@ char putKeyoardChar = 0;
 void InitInputs()
 {
     //tusb_init();
-    //tuh_init(BOARD_TUH_RHPORT);
+    tuh_init(BOARD_TUH_RHPORT);
     //
 }
 
 void ReadInputs()
 {
-    
+    for(uint8_t mb = 0; mb < MBCOUNT; mb++)
+    {
+        if (MouseBPressed[mb] == 1)
+        {
+            MouseBPressed[mb] = 0;
+        }
+
+        if (MouseBReleased[mb] == 1)
+        {
+            MouseBHold[mb] = 0;
+            MouseBReleased[mb] = 0;
+        }
+    }
+
     for(uint8_t key = 0; key < KEYCOUNT; key++)
     {
         if (KeycodesPressed[key] == 1)
@@ -48,7 +67,7 @@ void ReadInputs()
     }
 
     tuh_task(); 
-    //cdc_app_task(); unneccesary
+    cdc_app_task(); 
 }
 
 uint8_t KeyboardGetHold(KeyboardInput input)
@@ -95,17 +114,17 @@ int8_t MouseGetSSpeed()
 
 uint8_t MouseGetHold(MouseInput input)
 {
-
+    return MouseBHold[input];
 }
 
 uint8_t MouseGetPressed(MouseInput input)
 {
-
+    return MouseBPressed[input]; 
 }
 
 uint8_t MouseGetReleased(MouseInput input)
 {
-
+    return MouseBReleased[input];
 }
 
 void KeyboardSetConnected()
@@ -162,12 +181,42 @@ void MouseSetMovement(int8_t x, int8_t y, int8_t wheel)
     MouseSSpeed = wheel;
 }
 
-void MouseSetKeyPressed(MouseInput keyCode)
+void MouseSetButtons(uint8_t lb, uint8_t mb, uint8_t rb, uint8_t plb, uint8_t pmb, uint8_t prb)
 {
+    if (lb && !plb)
+    {
+        MouseBPressed[USB_MOUSEB_LEFT] = 1;
+        MouseBHold[USB_MOUSEB_LEFT] = 1;
+        
+    } 
+    if (!lb && plb)
+    {
+        MouseBReleased[USB_MOUSEB_LEFT] = 1;
+        MouseBHold[USB_MOUSEB_LEFT] = 0;
+    }
 
-}
+    if (mb && !pmb)
+    {
+        MouseBPressed[USB_MOUSEB_MIDDLE] = 1;
+        MouseBHold[USB_MOUSEB_MIDDLE] = 1;
+        
+    } 
+    if (!mb && pmb)
+    {
+        MouseBReleased[USB_MOUSEB_MIDDLE] = 1;
+        MouseBHold[USB_MOUSEB_MIDDLE] = 0;
+    }
 
-void MouseSetKeyReleased(MouseInput keyCode)
-{
+    if (rb && !prb)
+    {
+        MouseBPressed[USB_MOUSEB_RIGHT] = 1;
+        MouseBHold[USB_MOUSEB_RIGHT] = 1;
+        
+    } 
+    if (!rb && prb)
+    {
+        MouseBReleased[USB_MOUSEB_RIGHT] = 1;
+        MouseBHold[USB_MOUSEB_RIGHT] = 0;
+    }
 
 }

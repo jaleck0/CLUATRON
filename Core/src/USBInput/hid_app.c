@@ -29,6 +29,8 @@
 #include "../Terminal/Terminal.h"
 #include "Input.h"
 
+#include <stdlib.h>
+
 //--------------------------------------------------------------------+
 // MACRO TYPEDEF CONSTANT ENUM DECLARATION
 //--------------------------------------------------------------------+
@@ -177,7 +179,7 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
     {
       if ( find_key_in_report(&prev_report, report->keycode[i]) )
       {
-       
+        
       }
       else
       {
@@ -193,17 +195,15 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
           KeyboardSetInputChar(ch);
           changed = 1;
         }
+      }
     }
-    for(uint8_t key = 0; key <= 127; key++)
+    for(uint8_t key = 0; key <= 107; key++)
     {
       if (KeyboardGetHold(key) == 1 && !(find_key_in_report(report, key)))
       {
         KeyboardSetKeyReleased(key);
       }
     }
-    
-    // TODO example skips key released
-  }
   }
   prev_report = *report;
 }
@@ -211,43 +211,6 @@ static void process_kbd_report(hid_keyboard_report_t const *report)
 //--------------------------------------------------------------------+
 // Mouse
 //--------------------------------------------------------------------+
-
-void cursor_movement(int8_t x, int8_t y, int8_t wheel)
-{
-#if USE_ANSI_ESCAPE
-  // Move X using ansi escape
-  if ( x < 0)
-  {
-    //printf(ANSI_CURSOR_BACKWARD(%d), (-x)); // move left
-  }else if ( x > 0)
-  {
-    //printf(ANSI_CURSOR_FORWARD(%d), x); // move right
-  }
-
-  // Move Y using ansi escape
-  if ( y < 0)
-  {
-    //printf(ANSI_CURSOR_UP(%d), (-y)); // move up
-  }else if ( y > 0)
-  {
-    //printf(ANSI_CURSOR_DOWN(%d), y); // move down
-  }
-
-  // Scroll using ansi escape
-  if (wheel < 0)
-  {
-    //printf(ANSI_SCROLL_UP(%d), (-wheel)); // scroll up
-  }else if (wheel > 0)
-  {
-    //printf(ANSI_SCROLL_DOWN(%d), wheel); // scroll down
-  }
-
-  //printf("\r\n");
-#else
-  //IMPLEMENT LATER printf("(%d %d %d)\r\n", x, y, wheel);
-#endif
-}
-
 static void process_mouse_report(hid_mouse_report_t const * report)
 {
   static hid_mouse_report_t prev_report = { 0 };
@@ -261,11 +224,18 @@ static void process_mouse_report(hid_mouse_report_t const * report)
   //     report->buttons & MOUSE_BUTTON_MIDDLE ? 'M' : '-',
   //     report->buttons & MOUSE_BUTTON_RIGHT  ? 'R' : '-');
   //}
+  MouseSetButtons(report->buttons & MOUSE_BUTTON_LEFT
+  , report->buttons & MOUSE_BUTTON_MIDDLE
+  , report->buttons & MOUSE_BUTTON_RIGHT
+  , prev_report.buttons & MOUSE_BUTTON_LEFT
+  , prev_report.buttons & MOUSE_BUTTON_MIDDLE
+  , prev_report.buttons & MOUSE_BUTTON_RIGHT);
+
 
   //------------- cursor movement -------------//
   //cursor_movement(report->x, report->y, report->wheel);
   MouseSetMovement(report->x, report->y, report->wheel);
-
+  prev_report = *report;
 }
 
 //--------------------------------------------------------------------+

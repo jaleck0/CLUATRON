@@ -369,6 +369,39 @@ static int l_get_mscr(lua_State* L)
     return 1;
 }
 
+//int mbp()
+static int l_get_mbp(lua_State* L)
+{
+    int input = lua_tointeger(L, 1);
+    int result = MouseGetPressed(input);
+    lua_pop(L, 1);
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+//int mbh()
+static int l_get_mbh(lua_State* L)
+{
+    int input = lua_tointeger(L, 1);
+    int result = MouseGetHold(input);
+    lua_pop(L, 1);
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
+//int mbr()
+static int l_get_mbr(lua_State* L)
+{
+    int input = lua_tointeger(L, 1);
+    int result = MouseGetReleased(input);
+    lua_pop(L, 1);
+    lua_pushinteger(L, result);
+    
+    return 1;
+}
+
 void RegisterConstants(lua_State* L)
 {
     lua_pushnumber(L, (lua_Number)l_mathop(3.14));
@@ -407,4 +440,7 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "mdx", l_get_mdx);
     lua_register(L, "mdy", l_get_mdy);
     lua_register(L, "mscr", l_get_mscr);
+    lua_register(L, "mbp", l_get_mbp);
+    lua_register(L, "mbh", l_get_mbh);
+    lua_register(L, "mbr", l_get_mbr);
 }

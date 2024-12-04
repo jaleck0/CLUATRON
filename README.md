@@ -43,3 +43,70 @@ Here is an example of a development board for the Cluatron.
 
 # Usage
 Programs and commands are written in LUA 5.4.6.
+Programs can be edited in the Cluatron Editing tool which is accesed with F2.
+Commands can be written and executed in the Cluashell which is accesed with F1.
+
+## Programming
+As mentioned before programs and commands are written in LUA 5.4.6.
+The Cluatron also provides extra functions baked into the system for more functionality these functions can be sorted into different groups.
+
+### System control functions
+- reset() 
+- bootsel()
+- millis()
+
+### Terminal control functions
+- pcol( c)
+- bcol( c)
+
+### Graphics functions
+- rgb( r, g, b)
+- pal( c)
+- dot( x, y, c)
+- cls( c)
+- line( x1, y1, x2, y2, c)
+- rect( x, y, w, h, c)
+- rectfill( x, y, w, h, c)
+- tri( x1, y1, x2, y2, x3, y3, c)
+- circ( x, y, r, c)
+- circfill( x, y, r, c)
+- oval( x, y, w, h, c)
+- ovalfill( x, y, w, h, c)
+- text( str, x, y, c)
+- textfill( str, x, y, c0, c1)
+
+*As of now all parameters must be entered with integers so to draw a rectangle to a variable position on the screen one must enter:
+```
+rect(math.floor(x), math.floor(y), 16, 32, 8)
+```
+
+### USB input functions
+- init_input()
+- read_input()
+- keyp( kbkey)
+- keyh( kbkey)
+- keyr( kbkey)
+- mdx()
+- mdy()
+- mscr()
+- mbp( mbutton)
+- mbh( mbutton)
+- mbr( mbutton)
+
+*As of now all of these functions return integers and reading them out must be treated so
+This is how one must read out the value of a keyboard button pressed
+```
+if (keybp(80) == 1) then
+	moveleft()
+end
+```
+
+### USB keyboard input constants
+![Alt](/pictures/USBkbmap.png)
+
+### USB mouse input constants
+0. Left button
+1. Middle button
+2. Right button
+
+For extra programming references look into the /Programs/-folder.

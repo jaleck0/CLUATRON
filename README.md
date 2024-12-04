@@ -96,7 +96,7 @@ rect(math.floor(x), math.floor(y), 16, 32, 8)
 *As of now all of these functions return integers and reading them out must be treated so
 This is how one must read out the value of a keyboard button pressed
 ```
-if (keybp(80) == 1) then
+if (keyp(80) == 1) then
 	moveleft()
 end
 ```

@@ -51,17 +51,17 @@ As mentioned before programs and commands are written in LUA 5.4.6.
 The Cluatron also provides extra functions baked into the system for more functionality these functions can be sorted into different groups.
 
 ### System control functions
-- reset() 
-- bootsel()
-- millis()
+- reset() : Resets the Cluatron.
+- bootsel() : Puts the Cluatron in bootsel mode.
+- millis() : Returns the amount of milliseconds the Cluatron has been active.
 
 ### Terminal control functions
-- pcol( c)
-- bcol( c)
+- pcol( c) : Sets the text color of the terminal, "c" is the color index within a range of 0 - 15.
+- bcol( c) : Sets the background color of the terminal, "c" is the color index within a range of 0 - 15. 
 
 ### Graphics functions
-- rgb( r, g, b)
-- pal( c)
+- rgb( r, g, b) : Returns a 15 bit color value, "r" "g" "b" are within range of 0 - 255. 
+- pal( c, setcol) : sets color value for index "c" to "setcol", "c" is within range of 0 - 15 and "setcol" is within range of 0 - 32767. Use the rgb() function to accurately determine the "setcol".
 - dot( x, y, c)
 - cls( c)
 - line( x1, y1, x2, y2, c)

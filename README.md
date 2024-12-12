@@ -46,9 +46,30 @@ Programs and commands are written in LUA 5.4.6.
 Programs can be edited in the Cluatron Editing tool which is accesed with F2.
 Commands can be written and executed in the Cluashell which is accesed with F1.
 
+## F1 Using the CluaShell
+The Cluashell is a shell like most shells but also contains a couple shortcuts for optimal usage.
+
+| Key combination | Function |
+|          :---: | :----  
+| Esc | Stops program loop. |
+| Enter | Executes a Cluashell command. |
+| Ctrl-L | Clears the Cluashell. |
+| Ctrl-E | Executes a program from the Cluatron editing tool. |
+
+The Cluashell also has a command history wich can be navigated with the up and down arrows.
+Cluashell commands have a limit of 77 characters each.
+
+## F2 Using the Cluatron editing tool
+
+The Cluatron editing tool as of now is quite a limited text editor.
+The character limit is 32768 characters.
+Navigation through a script is done using the left and right arrow keys.
+
+In order to run a program press F1 and then Ctrl-E.
+
 ## Programming
 As mentioned before programs and commands are written in LUA 5.4.6.
-The Cluatron also provides extra functions baked into the system for more functionality these functions can be sorted into different groups.
+The Cluatron also provides extra functions baked into the system for more functionality, these functions can be sorted into different groups.
 
 ### System control functions
 
@@ -66,7 +87,7 @@ The Cluatron also provides extra functions baked into the system for more functi
 
 ### Graphics functions
 | Function Name | Return type | Description |
-|          ---: | :---: | :---        |
+| :---- | :---: | :---        |
 | rgb( r, g, b) | int | Returns a 15 bit color value, "r" "g" "b" are within range of 0 - 255. |
 | pal( c, setcol) | void | Sets color value for index "c" to "setcol", "c" is within range of 0 - 15 and "setcol" is within range of 0 - 32767. Use the rgb() function to accurately determine the "setcol". |
 | dot( x, y, c) | void | Puts a pixel on the screen at position "x" , "y", "c" is the color index within a range of 0 - 15. |
@@ -88,20 +109,26 @@ rect(math.floor(x), math.floor(y), 16, 32, 8)
 ```
 
 ### USB input functions
-- init_input()
-- read_input()
-- keyp( kbkey)
-- keyh( kbkey)
-- keyr( kbkey)
-- mdx()
-- mdy()
-- mscr()
-- mbp( mbutton)
-- mbh( mbutton)
-- mbr( mbutton)
 
-*As of now all of these functions return integers and reading them out must be treated so
-This is how one must read out the value of a keyboard button pressed
+| Function Name | Return type | Description |
+| :---- | :---: | :---        |
+| init_input() | int | Initialises usb input. (done automatically) |
+| read_input() | int | Updates all input buffers. (done automatically) | 
+| keyp( keycode) | int | Returns the rising edge value for if "keycode" has been pressed on the keboard. Returns 1 if true and 0 if false. |
+| keyh( keycode) | int | Returns the value for if "keycode" has been pressed on the keyboard. Returns 1 if true and 0 if false.
+| keyr( keycode) | int | Returns the falling edge value for if "keycode" has been released on the keyboard. Returns 1 if true and 0 if false.
+| mdx() | int | Returns the horizontal mouse speed. The speed value is clamped between -128 and 127.
+| mdy() | int | Returns the vertical mouse speed. The speed value is clamped between -128 and 127.
+| mscr() | int | Returns the scrolling speed on the mouse. The speed value is clamped between -1 and 1.
+| mbp( mbuttoncode) | int | Returns the rising edge value for if "mbuttoncode" has been pressed on the mouse. Returns 1 if true and 0 if false.
+| mbh( mbuttoncode) | int | Returns the value for if "mbuttoncode" has been pressed on the mouse. Returns 1 if true and 0 if false.
+| mbr( mbuttoncode) | int | Returns the falling edge value for if "mbuttoncode" has been released on the mouse. Returns 1 if true and 0 if false.
+
+For the "keycode" on the keyboard refer to the USB keyboard input constants.
+For the "mbuttoncode" on the mouse refer to the USB mouse input constants.
+
+*As of now all of these functions return integers and reading them out must be treated so.
+This is how one must read out the value of a keyboard button pressed.
 ```
 if (keyp(80) == 1) then
 	moveleft()

@@ -2,7 +2,7 @@
 repository for the CLUATRON - Made by JALECKO
 project registred on github since 17/3/24
 
-The CLUATRON is a RP2040 based general purpose computer inspired by the maximite line of micro computers and the PICO-8 fantasy console.
+The CLUATRON is a RP2040 based general purpose micro computer inspired by the maximite line of micro computers and the PICO-8 fantasy console.
 The goal with this project is to have a functional microcomputer that has an operating system with a terminal and a text editor.
 Programs for the CLUATRON will be written in a modified version of LUA 5.4.6 with a couple of additional commands that allow for easier program development.
 
@@ -144,3 +144,29 @@ end
 2. Right button
 
 For extra programming references look into the /Programs/-folder.
+
+# roadmap
+Planned Hardware features.
+- DVI video output.
+- I2S audio with headphone jack.
+- SD card support.
+- 4 USB device support.
+
+Planned software features
+- Improved graphics LUA API. 
+- Improved USB input LUA API.
+- Game controller input LUA API.
+- Audio output LUA API.
+- SD card file navigation.
+- SD card fileIO.
+- Integrated Sprite editor.
+- sprite support in LUA API.
+- Integrated Color palette editor.
+- Sound editor.
+- Music tracker software.
+- IO signal LUA API.
+- UART communication LUA API.
+- I2C communication LUA API.
+- SPI communication LUA API.
+- WAV audio output.
+- BMP image drawing.

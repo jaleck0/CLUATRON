@@ -51,31 +51,38 @@ As mentioned before programs and commands are written in LUA 5.4.6.
 The Cluatron also provides extra functions baked into the system for more functionality these functions can be sorted into different groups.
 
 ### System control functions
-- reset() : Resets the Cluatron.
-- bootsel() : Puts the Cluatron in bootsel mode.
-- millis() : Returns the amount of milliseconds the Cluatron has been active.
+
+| Function Name | Return type | Description |
+|          ---: | :---: | :---        |
+| reset()       | void         | Resets the Cluatron. |
+| bootsel() | void | Puts the Cluatron in bootsel mode. |
+| millis() | int | Returns the amount of milliseconds the Cluatron has been active. |
 
 ### Terminal control functions
-- pcol( c) : Sets the text color of the terminal, "c" is the color index within a range of 0 - 15.
-- bcol( c) : Sets the background color of the terminal, "c" is the color index within a range of 0 - 15. 
+| Function Name | Return type | Description |
+|          ---: | :---: | :---        |
+| pcol( c) | void | Sets the text color of the terminal, "c" is the color index within a range of 0 - 15. |
+| bcol( c) | void | Sets the background color of the terminal, "c" is the color index within a range of 0 - 15. | 
 
 ### Graphics functions
-- rgb( r, g, b) : Returns a 15 bit color value, "r" "g" "b" are within range of 0 - 255. 
-- pal( c, setcol) : sets color value for index "c" to "setcol", "c" is within range of 0 - 15 and "setcol" is within range of 0 - 32767. Use the rgb() function to accurately determine the "setcol".
-- dot( x, y, c)
-- cls( c)
-- line( x1, y1, x2, y2, c)
-- rect( x, y, w, h, c)
-- rectfill( x, y, w, h, c)
-- tri( x1, y1, x2, y2, x3, y3, c)
-- circ( x, y, r, c)
-- circfill( x, y, r, c)
-- oval( x, y, w, h, c)
-- ovalfill( x, y, w, h, c)
-- text( str, x, y, c)
-- textfill( str, x, y, c0, c1)
+| Function Name | Return type | Description |
+|          ---: | :---: | :---        |
+| rgb( r, g, b) | int | Returns a 15 bit color value, "r" "g" "b" are within range of 0 - 255. |
+| pal( c, setcol) | void | Sets color value for index "c" to "setcol", "c" is within range of 0 - 15 and "setcol" is within range of 0 - 32767. Use the rgb() function to accurately determine the "setcol". |
+| dot( x, y, c) | void | Puts a pixel on the screen at position "x" , "y", "c" is the color index within a range of 0 - 15. |
+| cls( c) | void | Fills the screen with color "c", "c" is the color index within a range of 0 - 15. |
+| line( x1, y1, x2, y2, c) | void | Draws a line from position "x1" , "y1" to position "x2" , "y2" in color "c", "c" is the color index within a range of 0 - 15. |
+| rect( x, y, w, h, c) | void | Draws a rectangle with upper left position "x" , "y" with a width of "w" and a height of "h" in color "c", "c" is the color index within a range of 0 - 15. |
+| rectfill( x, y, w, h, c) | void | Draws a filled rectangle with upper left position "x" , "y" with a width of "w" and a height of "h" in color "c", "c" is the color index within a range of 0 - 15. |
+| tri( x1, y1, x2, y2, x3, y3, c) | void | Draws a triangle on position "x1" , "y1" to position "x2" , "y2" to position "x3" , "y3"  in color "c", "c" is the color index within a range of 0 - 15. |
+| circ( x, y, r, c) | void | Draws a circle with center position "x" , "y" with a radius of "r" in color "c", "c" is the color index within a range of 0 - 15. |
+| circfill( x, y, r, c) | void | Draws a filled circle with center position "x" , "y" with a radius of "r" in color "c", "c" is the color index within a range of 0 - 15. |
+| oval( x, y, w, h, c) | void | Draws a oval with upper left position "x" , "y" with a width of "w" and a height of "h" in color "c", "c" is the color index within a range of 0 - 15. |
+| ovalfill( x, y, w, h, c) | void | Draws a filled oval with upper left position "x" , "y" with a width of "w" and a height of "h" in color "c", "c" is the color index within a range of 0 - 15. |
+| text( str, x, y, c) | void | Draws a string of text "str" with upper left position "x" , "y" in color "c", "c" is the color index within a range of 0 - 15. |
+| textfill( str, x, y, c0, c1) | void | Draws a string of text "str" with upper left position "x" , "y" in color "c" with a background color "c1", "c0" and "c1" are color indexes within a range of 0 - 15. |
 
-*As of now all parameters must be entered with integers so to draw a rectangle to a variable position on the screen one must enter:
+*As of now all parameters must be entered as integers so to draw a rectangle to a variable position on the screen one must enter:
 ```
 rect(math.floor(x), math.floor(y), 16, 32, 8)
 ```

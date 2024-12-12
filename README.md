@@ -145,7 +145,7 @@ end
 
 For extra programming references look into the /Programs/-folder.
 
-# roadmap
+# Roadmap
 Planned Hardware features.
 - DVI video output.
 - I2S audio with headphone jack.

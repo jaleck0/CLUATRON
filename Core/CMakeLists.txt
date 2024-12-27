@@ -20,7 +20,7 @@ add_executable(cluatron
 	src/Graphics/GraphicsFunctions.c
 	src/Terminal/Terminal.c
 	src/USBInput/hid_app.c
-	src/USBInput/cdc_app.c
+	#src/USBInput/cdc_app.c
 	src/USBInput/Input.c
 	src/OS/Commands.c
     src/OS/SharedOS.c
@@ -81,5 +81,6 @@ target_link_libraries(cluatron PUBLIC
 	pico_scanvideo_dpi
 	pico_multicore
 	hardware_interp
+    hardware_adc
 	tinyusb_host 
 	tinyusb_board)

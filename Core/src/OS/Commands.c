@@ -11,6 +11,7 @@
 #include "hardware/watchdog.h"
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
+#include "hardware/adc.h"
 
 static int l_reset(lua_State* L) 
 {
@@ -23,6 +24,18 @@ static int l_bootsel(lua_State* L)
 {
     reset_usb_boot(0, 0);
     return 0;
+}
+
+//temp()
+static int l_temp(lua_State* L) 
+{
+    uint16_t raw = adc_read();
+    const float convf = 3.3f / (1<<12);
+    float result = raw * convf;
+    float temp = 27 - (result - 0.706)/0.001721;
+
+    lua_pushnumber(L, temp);
+    return 1;
 }
 
 // pcol(col)
@@ -414,6 +427,7 @@ void RegisterCommands(lua_State* L)
 {
     lua_register(L, "reset", l_reset);
     lua_register(L, "bootsel", l_bootsel);
+    lua_register(L, "temp", l_temp);
     lua_register(L, "pcol", l_set_printcolor);
     lua_register(L, "bcol", l_set_backcolor);
     lua_register(L, "dot", l_put_pixel);   

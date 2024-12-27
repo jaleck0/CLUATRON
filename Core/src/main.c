@@ -4,6 +4,7 @@
 #include "pico/scanvideo/composable_scanline.h"
 #include "pico/multicore.h"
 #include "hardware/clocks.h"
+#include "hardware/adc.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -35,6 +36,10 @@ int main (void)
 {
     set_sys_clock_khz (250000, true);
     stdio_init_all();
+
+    adc_init();
+    adc_set_temp_sensor_enabled(true);
+    adc_select_input(4);
 
     multicore_launch_core1(core1Func);    
 

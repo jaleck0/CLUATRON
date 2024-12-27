@@ -25,7 +25,7 @@ int8_t MouseXSpeed = 0;
 int8_t MouseYSpeed = 0;
 int8_t MouseSSpeed = 0;
 
-extern void cdc_app_task(void);
+//extern void cdc_app_task(void);
 
 char putKeyoardChar = 0;
 
@@ -67,7 +67,7 @@ void ReadInputs()
     }
 
     tuh_task(); 
-    cdc_app_task(); 
+    //cdc_app_task(); 
 }
 
 uint8_t KeyboardGetHold(KeyboardInput input)

@@ -41,7 +41,7 @@ static int l_temp(lua_State* L)
 // pcol(col)
 static int l_set_printcolor(lua_State* L) 
 {
-    int col = lua_tointeger(L, 1);
+    int col = (int)lua_tonumber(L, 1);
     lua_pop(L, 1);
     col %= 16;
     SetTextColor(col);
@@ -51,7 +51,7 @@ static int l_set_printcolor(lua_State* L)
 // bcol(col)
 static int l_set_backcolor(lua_State* L) 
 {
-    int col = lua_tointeger(L, 1);
+    int col = (int)lua_tonumber(L, 1);
     lua_pop(L, 1);
     col %= 16;
     TerminalSetBackCol(col);
@@ -61,8 +61,8 @@ static int l_set_backcolor(lua_State* L)
 // pal(col-index, col-val)
 static int l_set_palindexcolor(lua_State* L) 
 {
-    int colIndex = lua_tointeger(L, 1);
-    int colValue = lua_tointeger(L, 2);
+    int colIndex = (int)lua_tonumber(L, 1);
+    int colValue = (int)lua_tonumber(L, 2);
     lua_pop(L, 1);
     ChangeColor(colIndex, colValue);
     set_colours();
@@ -72,9 +72,9 @@ static int l_set_palindexcolor(lua_State* L)
 // int rgb(r,g,b)
 static int l_get_rgbcolor(lua_State* L) 
 {
-    uint16_t r = (lua_tointeger(L, 1) % 256) >> 3;
-    uint16_t g = (lua_tointeger(L, 2) % 256) >> 3;
-    uint16_t b = (lua_tointeger(L, 3) % 256) >> 3;
+    uint16_t r = ((int)lua_tonumber(L, 1) % 256) >> 3;
+    uint16_t g = ((int)lua_tonumber(L, 2) % 256) >> 3;
+    uint16_t b = ((int)lua_tonumber(L, 3) % 256) >> 3;
 
     lua_pop(L, 1);
     lua_Integer newCol = r | g << 6 | b << 11;
@@ -85,9 +85,9 @@ static int l_get_rgbcolor(lua_State* L)
 //void dot(x,y,color)
 static int l_put_pixel(lua_State* L)
 {
-    int xpos = lua_tointeger(L, 1);
-    int ypos = lua_tointeger(L, 2);
-    int col = lua_tointeger(L, 3);
+    int xpos = (int)lua_tonumber(L, 1);
+    int ypos = (int)lua_tonumber(L, 2);
+    int col = (int)lua_tonumber(L, 3);
 
     lua_pop(L, 1);
     col %= 16;
@@ -99,7 +99,7 @@ static int l_put_pixel(lua_State* L)
 //void cls([color])
 static int l_clearscreen(lua_State* L)
 {
-    int col = lua_tointeger(L, 1);
+    int col = (int)lua_tonumber(L, 1);
     TerminalSetBackCol(col%16);
 
     lua_pop(L, 1);
@@ -111,11 +111,11 @@ static int l_clearscreen(lua_State* L)
 //void line(x1,y1,x2,y2,color)
 static int l_put_line(lua_State* L)
 {
-    int x1 = lua_tointeger(L, 1);
-    int y1 = lua_tointeger(L, 2);
-    int x2 = lua_tointeger(L, 3);
-    int y2 = lua_tointeger(L, 4);
-    int col = lua_tointeger(L, 5);
+    int x1 = (int)lua_tonumber(L, 1);
+    int y1 = (int)lua_tonumber(L, 2);
+    int x2 = (int)lua_tonumber(L, 3);
+    int y2 = (int)lua_tonumber(L, 4);
+    int col = (int)lua_tonumber(L, 5);
 
     lua_pop(L, 1);
     col %= 16;
@@ -128,11 +128,11 @@ static int l_put_line(lua_State* L)
 //void rect(x,y,w,h,color)
 static int l_put_rect(lua_State* L)
 {
-    int xpos = lua_tointeger(L, 1);
-    int ypos = lua_tointeger(L, 2);
-    int w = lua_tointeger(L, 3);
-    int h = lua_tointeger(L, 4);
-    int col = lua_tointeger(L, 5);
+    int xpos = (int)lua_tonumber(L, 1);
+    int ypos = (int)lua_tonumber(L, 2);
+    int w = (int)lua_tonumber(L, 3);
+    int h = (int)lua_tonumber(L, 4);
+    int col = (int)lua_tonumber(L, 5);
 
     lua_pop(L, 1);
     col %= 16;
@@ -144,11 +144,11 @@ static int l_put_rect(lua_State* L)
 //void rectfill(x,y,w,h,color)
 static int l_put_rectfill(lua_State* L)
 {
-    int xpos = lua_tointeger(L, 1);
-    int ypos = lua_tointeger(L, 2);
-    int w = lua_tointeger(L, 3);
-    int h = lua_tointeger(L, 4);
-    int col = lua_tointeger(L, 5);
+    int xpos = (int)lua_tonumber(L, 1);
+    int ypos = (int)lua_tonumber(L, 2);
+    int w = (int)lua_tonumber(L, 3);
+    int h = (int)lua_tonumber(L, 4);
+    int col = (int)lua_tonumber(L, 5);
 
     lua_pop(L, 1);
     col %= 16;
@@ -160,13 +160,13 @@ static int l_put_rectfill(lua_State* L)
 //void tri(x1,y1,x2,y2,x3,y3,color)
 static int l_put_tri(lua_State* L)
 {
-    int x1 = lua_tointeger(L, 1);
-    int y1 = lua_tointeger(L, 2);
-    int x2 = lua_tointeger(L, 3);
-    int y2 = lua_tointeger(L, 4);
-    int x3 = lua_tointeger(L, 5);
-    int y3 = lua_tointeger(L, 6);
-    int col = lua_tointeger(L, 7);
+    int x1 = (int)lua_tonumber(L, 1);
+    int y1 = (int)lua_tonumber(L, 2);
+    int x2 = (int)lua_tonumber(L, 3);
+    int y2 = (int)lua_tonumber(L, 4);
+    int x3 = (int)lua_tonumber(L, 5);
+    int y3 = (int)lua_tonumber(L, 6);
+    int col = (int)lua_tonumber(L, 7);
 
     lua_pop(L, 1);
     col %= 16;
@@ -178,13 +178,13 @@ static int l_put_tri(lua_State* L)
 //void tri(x1,y1,x2,y2,x3,y3,color)
 static int l_put_trifill(lua_State* L)
 {
-    int x1 = lua_tointeger(L, 1);
-    int y1 = lua_tointeger(L, 2);
-    int x2 = lua_tointeger(L, 3);
-    int y2 = lua_tointeger(L, 4);
-    int x3 = lua_tointeger(L, 5);
-    int y3 = lua_tointeger(L, 6);
-    int col = lua_tointeger(L, 7);
+    int x1 = (int)lua_tonumber(L, 1);
+    int y1 = (int)lua_tonumber(L, 2);
+    int x2 = (int)lua_tonumber(L, 3);
+    int y2 = (int)lua_tonumber(L, 4);
+    int x3 = (int)lua_tonumber(L, 5);
+    int y3 = (int)lua_tonumber(L, 6);
+    int col = (int)lua_tonumber(L, 7);
 
     lua_pop(L, 1);
     col %= 16;
@@ -196,10 +196,10 @@ static int l_put_trifill(lua_State* L)
 //void circ(x,y,r,color)
 static int l_put_circ(lua_State* L)
 {
-    int x = lua_tointeger(L, 1);
-    int y = lua_tointeger(L, 2);
-    int r = lua_tointeger(L, 3);
-    int col = lua_tointeger(L, 4);
+    int x = (int)lua_tonumber(L, 1);
+    int y = (int)lua_tonumber(L, 2);
+    int r = (int)lua_tonumber(L, 3);
+    int col = (int)lua_tonumber(L, 4);
 
     lua_pop(L, 1);
     col %= 16;
@@ -211,10 +211,10 @@ static int l_put_circ(lua_State* L)
 //void circfill(x,y,r,color)
 static int l_put_circfill(lua_State* L)
 {
-    int x = lua_tointeger(L, 1);
-    int y = lua_tointeger(L, 2);
-    int r = lua_tointeger(L, 3);
-    int col = lua_tointeger(L, 4);
+    int x = (int)lua_tonumber(L, 1);
+    int y = (int)lua_tonumber(L, 2);
+    int r = (int)lua_tonumber(L, 3);
+    int col = (int)lua_tonumber(L, 4);
 
     lua_pop(L, 1);
     col %= 16;
@@ -226,11 +226,11 @@ static int l_put_circfill(lua_State* L)
 //void oval(x1,y1,w,h,color)
 static int l_put_oval(lua_State* L)
 {
-    int x = lua_tointeger(L, 1);
-    int y = lua_tointeger(L, 2);
-    int w = lua_tointeger(L, 3);
-    int h = lua_tointeger(L, 4);
-    int col = lua_tointeger(L, 5);
+    int x = (int)lua_tonumber(L, 1);
+    int y = (int)lua_tonumber(L, 2);
+    int w = (int)lua_tonumber(L, 3);
+    int h = (int)lua_tonumber(L, 4);
+    int col = (int)lua_tonumber(L, 5);
 
     lua_pop(L, 1);
     col %= 16;
@@ -242,11 +242,11 @@ static int l_put_oval(lua_State* L)
 //void ovalfill(x,y,w,h,color)
 static int l_put_ovalfill(lua_State* L)
 {
-    int x = lua_tointeger(L, 1);
-    int y = lua_tointeger(L, 2);
-    int w = lua_tointeger(L, 3);
-    int h = lua_tointeger(L, 4);
-    int col = lua_tointeger(L, 5);
+    int x = (int)lua_tonumber(L, 1);
+    int y = (int)lua_tonumber(L, 2);
+    int w = (int)lua_tonumber(L, 3);
+    int h = (int)lua_tonumber(L, 4);
+    int col = (int)lua_tonumber(L, 5);
 
     lua_pop(L, 1);
     col %= 16;
@@ -259,9 +259,9 @@ static int l_put_ovalfill(lua_State* L)
 static int l_put_text(lua_State* L)
 {
     char* str = lua_tostring(L, 1);
-    int x = lua_tointeger(L, 2);
-    int y = lua_tointeger(L, 3);
-    int col = lua_tointeger(L, 4);
+    int x = (int)lua_tonumber(L, 2);
+    int y = (int)lua_tonumber(L, 3);
+    int col = (int)lua_tonumber(L, 4);
 
     lua_pop(L, 1);
     col %= 16;
@@ -275,10 +275,10 @@ static int l_put_text(lua_State* L)
 static int l_put_textfill(lua_State* L)
 {
     char* str = lua_tostring(L, 1);
-    int x = lua_tointeger(L, 2);
-    int y = lua_tointeger(L, 3);
-    int col0 = lua_tointeger(L, 4);
-    int col1 = lua_tointeger(L, 5);
+    int x = (int)lua_tonumber(L, 2);
+    int y = (int)lua_tonumber(L, 3);
+    int col0 = (int)lua_tonumber(L, 4);
+    int col1 = (int)lua_tonumber(L, 5);
 
     lua_pop(L, 1);
     col0 %= 16;
@@ -428,8 +428,10 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "reset", l_reset);
     lua_register(L, "bootsel", l_bootsel);
     lua_register(L, "temp", l_temp);
+
     lua_register(L, "pcol", l_set_printcolor);
     lua_register(L, "bcol", l_set_backcolor);
+    
     lua_register(L, "dot", l_put_pixel);   
     lua_register(L, "pal", l_set_palindexcolor);
     lua_register(L, "cls", l_clearscreen);
@@ -446,6 +448,7 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "textfill", l_put_textfill);
     lua_register(L, "millis", l_get_millis);
     lua_register(L, "rgb", l_get_rgbcolor);
+
     lua_register(L, "init_input", l_set_inputinit);
     lua_register(L, "read_input", l_get_input);
     lua_register(L, "keyp", l_get_keyp);

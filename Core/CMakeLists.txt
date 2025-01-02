@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-set(PICO_BOARD vgaboard)
+set(PICO_BOARD pico)
 
 set(FAMILY rp2040)
 set(BOARD pico_sdk)
@@ -14,13 +14,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
+add_subdirectory(src/scanvideo)
+
 add_executable(cluatron
 	src/main.c
 	src/Framebuffer/FramebufferFunctions.c
 	src/Graphics/GraphicsFunctions.c
 	src/Terminal/Terminal.c
 	src/USBInput/hid_app.c
-	#src/USBInput/cdc_app.c
 	src/USBInput/Input.c
 	src/OS/Commands.c
     src/OS/SharedOS.c
@@ -78,9 +79,10 @@ pico_add_extra_outputs(cluatron)
 
 target_link_libraries(cluatron PUBLIC
 	pico_stdlib	
-	pico_scanvideo_dpi
+	pico_util
+	scanvideo
 	pico_multicore
 	hardware_interp
-    hardware_adc
+	hardware_adc
 	tinyusb_host 
 	tinyusb_board)

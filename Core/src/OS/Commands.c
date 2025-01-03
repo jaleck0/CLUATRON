@@ -12,6 +12,7 @@
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
 #include "hardware/adc.h"
+#include "hardware/uart.h"
 
 static int l_reset(lua_State* L) 
 {
@@ -421,7 +422,22 @@ void RegisterConstants(lua_State* L)
     lua_setfield(L, 2, "popo");
 }
 
-//to be added: setspr spr temp 
+//to be added: setspr spr 
+
+static int l_sendtextuart(lua_State* L)
+{
+    char* str = lua_tostring(L, 1);
+    lua_pop(L, 1);
+    uart_init(uart0, 115200);
+
+    gpio_set_function(0, GPIO_FUNC_UART);
+    gpio_set_function(1, GPIO_FUNC_UART);
+
+    uart_puts(uart0, str);
+    
+    return 0;
+}
+
 
 void RegisterCommands(lua_State* L)
 {
@@ -460,4 +476,6 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "mbp", l_get_mbp);
     lua_register(L, "mbh", l_get_mbh);
     lua_register(L, "mbr", l_get_mbr);
+
+    lua_register(L, "uartsend", l_sendtextuart);
 }

@@ -84,5 +84,6 @@ target_link_libraries(cluatron PUBLIC
 	pico_multicore
 	hardware_interp
 	hardware_adc
+    hardware_uart
 	tinyusb_host 
 	tinyusb_board)

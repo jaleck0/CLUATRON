@@ -15,6 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 add_subdirectory(src/scanvideo)
+add_subdirectory(src/sd build)
 
 add_executable(cluatron
 	src/main.c
@@ -80,10 +81,12 @@ pico_add_extra_outputs(cluatron)
 target_link_libraries(cluatron PUBLIC
 	pico_stdlib	
 	pico_util
+    FatFs_SPI
 	scanvideo
 	pico_multicore
 	hardware_interp
 	hardware_adc
 	hardware_uart
+    hardware_spi
 	tinyusb_host 
 	tinyusb_board)

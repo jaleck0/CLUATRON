@@ -11,6 +11,9 @@
 #include "../lua/lauxlib.h"
 #include "../lua/lualib.h"
 
+#include "sd_card.h"
+#include "ff.h"
+
 #define PROMPT "> "
 
 #define BACKCOL 1
@@ -33,6 +36,11 @@ luaL_Buffer buf;
 int status;
 size_t len;
 char ch;
+
+FRESULT fr;
+FATFS fs;
+FIL fil;
+int ret;
 
 Program currentProgram;
 

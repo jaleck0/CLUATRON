@@ -20,7 +20,6 @@
 void RunCluatronOS() 
 {
     SetFont(font4x6);
-    board_init();
 
     cls(BACKCOL);
     SetTextColor(TEXTCOL);

@@ -4,9 +4,15 @@
 #include "../Graphics/font4x6.h"
 #include "../Terminal/Terminal.h"
 #include "../USBInput/Input.h"
+#include "../OS/SharedOS.h"
+
+#include "sd_card.h"
+#include "ff.h"
+
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "hardware/watchdog.h"
 #include "pico/stdlib.h"
@@ -438,6 +444,49 @@ static int l_sendtextuart(lua_State* L)
     return 0;
 }
 
+static int l_loadfilesd(lua_State* L)
+{
+    const TCHAR* filename = lua_tostring(L, 1);
+    lua_pop(L, 1);
+    
+    //FRESULT fr;
+    //FATFS fs;
+    //FIL fil;
+    //int ret;
+    
+    fr = f_open(&fil, filename, FA_READ);
+    if (fr != FR_OK) {
+        TerminalPutString("ERROR: Could not open file \r\n");
+        //while (true);
+    }
+    
+
+    file[0] = '\0';
+    file[1] = '\0';
+    
+    TerminalPutString("Loading ");
+    TerminalPutString(filename);
+    TerminalPutString(" into the text editor\r\n");
+    
+    TCHAR* c;
+
+    while (f_read(&fil, file, 32768, &ret))//(c = f_gets(file, 32768, &fil)) 
+    {
+        TerminalPutNumber((int)(file));
+        TerminalPutCharacter('\n');
+    }
+
+    // Close file
+    fr = f_close(&fil);
+    if (fr != FR_OK) 
+    {
+        TerminalPutString("ERROR: Could not close file \r\n");
+        //while (true);
+    }
+    
+    return 0;
+}
+
 
 void RegisterCommands(lua_State* L)
 {
@@ -478,4 +527,6 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "mbr", l_get_mbr);
 
     lua_register(L, "uartsend", l_sendtextuart);
+
+    lua_register(L, "load", l_loadfilesd);
 }

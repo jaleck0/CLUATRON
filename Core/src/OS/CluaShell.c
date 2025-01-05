@@ -29,6 +29,21 @@ void InitShell()
     status = luaL_loadbuffer(L, start, len, "startup");
     status = lua_pcall(L, 0, 0, 0);
     luaL_buffinit(L, &buf);
+
+    // Initialize SD card
+    if (!sd_init_driver()) 
+    {
+        TerminalPutString("ERROR: Could not initialize SD card\r\n");
+        //while (true);
+    }
+
+    // Mount drive
+    fr = f_mount(&fs, "0:", 1);
+    if (fr != FR_OK) 
+    {
+        TerminalPutString("ERROR: Could not mount filesystem \r\n");
+        //while (true);
+    }
 }
 
 void StartShell()

@@ -56,7 +56,7 @@ extern "C" {
 }
 #endif
 
-#define USE_LED 1
+#define USE_LED 0
 #if USE_LED
 #   define LED_PIN 25
 #   include "hardware/gpio.h"

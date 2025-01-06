@@ -33,7 +33,7 @@ void InitShell()
     // Initialize SD card
     if (!sd_init_driver()) 
     {
-        TerminalPutString("ERROR: Could not initialize SD card\r\n");
+        TerminalPutString("ERROR: could not initialize sd-card\r\n> ");
         //while (true);
     }
 
@@ -41,8 +41,12 @@ void InitShell()
     fr = f_mount(&fs, "0:", 1);
     if (fr != FR_OK) 
     {
-        TerminalPutString("ERROR: Could not mount filesystem \r\n");
+        TerminalPutString("ERROR: could not mount filesystem \r\n> ");
         //while (true);
+    }
+    else
+    {
+        TerminalPutString("sd-card has been found\r\n> ");
     }
 }
 

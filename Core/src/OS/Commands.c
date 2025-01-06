@@ -454,9 +454,10 @@ static int l_loadfilesd(lua_State* L)
     //FIL fil;
     //int ret;
     
+    
     fr = f_open(&fil, filename, FA_READ);
     if (fr != FR_OK) {
-        TerminalPutString("ERROR: Could not open file \r\n");
+        TerminalPutString("ERROR: could not open file \r\n");
         //while (true);
     }
     
@@ -464,7 +465,7 @@ static int l_loadfilesd(lua_State* L)
     file[0] = '\0';
     file[1] = '\0';
     
-    TerminalPutString("Loading ");
+    TerminalPutString("loading ");
     TerminalPutString(filename);
     TerminalPutString(" into the text editor\r\n");
     

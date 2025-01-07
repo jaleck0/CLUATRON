@@ -18,7 +18,7 @@
 #include "scanvideo_base.h"
 
 #ifndef PICO_SCANVIDEO_DPI_ALPHA_PIN
-#define PICO_SCANVIDEO_DPI_ALPHA_PIN 12u
+#define PICO_SCANVIDEO_DPI_ALPHA_PIN 10u
 #endif
 
 #ifndef PICO_SCANVIDEO_DPI_PIXEL_RSHIFT

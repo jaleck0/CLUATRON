@@ -84,7 +84,7 @@ static int l_get_rgbcolor(lua_State* L)
     uint16_t b = ((int)lua_tonumber(L, 3) % 256) >> 3;
 
     lua_pop(L, 1);
-    lua_Integer newCol = r | g << 6 | b << 11;
+    lua_Integer newCol = r | g << 5 | b << 11;
     lua_pushinteger(L, newCol);
     return 1;
 }
@@ -449,40 +449,44 @@ static int l_loadfilesd(lua_State* L)
     const TCHAR* filename = lua_tostring(L, 1);
     lua_pop(L, 1);
     
-    //FRESULT fr;
-    //FATFS fs;
-    //FIL fil;
-    //int ret;
-    
     
     fr = f_open(&fil, filename, FA_READ);
     if (fr != FR_OK) {
         TerminalPutString("ERROR: could not open file \r\n");
         //while (true);
     }
-    
+    else
+    {
+        TerminalPutString("loading ");
+        TerminalPutString(filename);
+        TerminalPutString("\r\n");
+    }
 
-    file[0] = '\0';
-    file[1] = '\0';
-    
-    TerminalPutString("loading ");
-    TerminalPutString(filename);
-    TerminalPutString(" into the text editor\r\n");
-    
     TCHAR* c;
+
+    for( int fp = 0; fp < 32768; fp++)
+    {
+        file[fp] = '\0';
+    }
 
     while (f_read(&fil, file, 32768, &ret))//(c = f_gets(file, 32768, &fil)) 
     {
-        TerminalPutNumber((int)(file));
-        TerminalPutCharacter('\n');
+        TerminalPutString("ERROR: could not find file\r\n");
+        break;
     }
 
     // Close file
     fr = f_close(&fil);
     if (fr != FR_OK) 
     {
-        TerminalPutString("ERROR: Could not close file \r\n");
+        //TerminalPutString("ERROR: could not close file \r\n");
         //while (true);
+    } 
+    else 
+    {
+        TerminalPutString("succesfully loaded ");
+        TerminalPutString(filename);
+        TerminalPutString(" into the text editor\r\n");
     }
     
     return 0;

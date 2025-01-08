@@ -21,7 +21,7 @@ make
 # Hardware (currently)
 - MCU: RP2040
 	- 264 kb SRAM
-	- 250 MHz it used to be200 MHz (overclocked)
+	- 250 MHz (overclocked)
 	- Dual core ARM M0+
 	- USB host/device capabilities
 	- Programmable I/O capabilities

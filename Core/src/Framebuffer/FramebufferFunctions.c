@@ -2,6 +2,23 @@
 
 uint16_t colours[COLOR_COUNT] =
 {
+    0,
+    0x521,
+    0x527,
+    0x580,
+    0x35a,
+    0x455,
+    0xccc,
+    0xeff,
+    0x40f,
+    0x0af,
+    0x2ef,
+    0x3e0,
+    0xfa2,
+    0x978,
+    0xa7f,
+    0xacf
+    /*
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(  0u,   0u,   0u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(29u,   43u,   83u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(126u, 37u,   83u),
@@ -17,7 +34,7 @@ uint16_t colours[COLOR_COUNT] =
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(  41u,   173u, 255u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(131u,   118u, 156u),
     PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 119u, 168u),
-    PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 204u, 170u)
+    PICO_SCANVIDEO_PIXEL_FROM_RGB8(255u, 204u, 170u)*/
 };
 
 uint32_t dblpal[COLOR_COUNT * COLOR_COUNT];

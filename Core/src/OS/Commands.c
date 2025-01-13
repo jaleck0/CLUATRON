@@ -79,12 +79,12 @@ static int l_set_palindexcolor(lua_State* L)
 // int rgb(r,g,b)
 static int l_get_rgbcolor(lua_State* L) 
 {
-    uint16_t r = ((int)lua_tonumber(L, 1) % 256) >> 3;
-    uint16_t g = ((int)lua_tonumber(L, 2) % 256) >> 3;
-    uint16_t b = ((int)lua_tonumber(L, 3) % 256) >> 3;
+    uint16_t r = ((int)lua_tonumber(L, 1) % 256) / 16;
+    uint16_t g = ((int)lua_tonumber(L, 2) % 256) / 16;
+    uint16_t b = ((int)lua_tonumber(L, 3) % 256) / 16;
 
     lua_pop(L, 1);
-    lua_Integer newCol = r | g << 5 | b << 11;
+    lua_Integer newCol = r | g << 4 | b << 8;
     lua_pushinteger(L, newCol);
     return 1;
 }

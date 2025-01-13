@@ -30,7 +30,7 @@ void InitShell()
     status = lua_pcall(L, 0, 0, 0);
     luaL_buffinit(L, &buf);
 
-    // Initialize SD card
+    /*// Initialize SD card
     if (!sd_init_driver()) 
     {
         TerminalPutString("ERROR: could not initialize sd-card\r\n> ");
@@ -47,7 +47,7 @@ void InitShell()
     else
     {
         TerminalPutString("sd-card has been found\r\n> ");
-    }
+    }*/
 }
 
 void StartShell()

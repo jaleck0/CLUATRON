@@ -24,19 +24,8 @@ void RunCluatronOS()
     cls(BACKCOL);
     SetTextColor(TEXTCOL);
     TerminalSetBackCol(BACKCOL);
-    TerminalPutString("                  ---CLUATRON OS 0.2 ~ Jalecko 2024 - 2025---\n");
-    
-    /*
-    type help() for more information
-    * 
-    ctrl-l      clear screen
-    ctrl-e  run current code
-    enter       run command
-    esc         stop program loop
-    */
 
-    TerminalPutString("\n ctrl-e  execute file\n ctrl-l  clear screen\n enter   execute command\n esc     stop program\n\n");
-    TerminalPutString(PROMPT);
+    
 
     uint8_t vis = 0;
     uint32_t mes = 0;

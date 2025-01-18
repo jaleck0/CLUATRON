@@ -18,6 +18,10 @@ char *startCommand = "function start() read_input() if keyh(41) == 1 then error(
 
 void InitShell()
 {
+
+    TerminalPutString("                  ---CLUATRON OS 0.2 ~ Jalecko 2024 - 2025---\n");
+    TerminalPutString("\n ctrl-e  execute file\n ctrl-l  clear screen\n enter   execute command\n esc     stop program\n\n ");
+
     L = luaL_newstate();
     luaL_openlibs(L);
     luaL_buffinit(L, &buf);
@@ -33,7 +37,7 @@ void InitShell()
     // Initialize SD card
     if (!sd_init_driver()) 
     {
-        TerminalPutString("ERROR: could not initialize sd-card\r\n> ");
+        TerminalPutString("ERROR: could not initialize sd-card\r\n ");
         //while (true);
     }
 
@@ -41,12 +45,90 @@ void InitShell()
     fr = f_mount(&fs, "0:", 1);
     if (fr != FR_OK) 
     {
-        TerminalPutString("ERROR: could not mount filesystem \r\n> ");
+        TerminalPutString("ERROR: could not find SD-card \r\n");
+        TerminalPutString(PROMPT);
+        return;
         //while (true);
     }
     else
     {
-        TerminalPutString("sd-card has been found\r\n> ");
+        TerminalPutString("sd-card has been found\r\n ");
+    }
+    
+    //load bootfile
+
+    const TCHAR* filename = "cluaboot";    
+    
+    fr = f_open(&fil, filename, FA_READ);
+    if (fr != FR_OK) {
+        TerminalPutString("ERROR: could not find cluaboot \r\n ");
+        return;
+        //while (true);
+    }
+    else
+    {
+        TerminalPutString("loading ");
+        TerminalPutString(filename);
+        TerminalPutString("\r\n ");
+    }
+
+    TCHAR* c;
+
+    while (f_read(&fil, file, 32768, &ret))//(c = f_gets(file, 32768, &fil)) 
+    {
+        TerminalPutString("ERROR: could not open cluaboot\r\n");
+        break;
+    }
+
+    // Close file
+    fr = f_close(&fil);
+    /*if (fr != FR_OK) 
+    {
+        //TerminalPutString("ERROR: could not close file \r\n");
+        //while (true);
+    } 
+    else 
+    {
+        
+    }*/
+
+    buf.b = file;
+    buf.n = strlen(file);
+    luaL_pushresult(&buf);
+    const char *s = lua_tolstring(L, -1, &len);
+    status = luaL_loadbuffer(L, s, len, "program");
+
+    filePos = 0;
+
+    if (status != LUA_OK)
+    {
+        const char *msg = lua_tostring(L, -1);
+        TerminalPutString("parse error: ");
+        TerminalPutString(msg);
+        TerminalPutString("\n");
+    }
+    else
+    {
+        status = lua_pcall(L, 0, 0, 0);
+
+        if (status != LUA_OK)
+        {
+            const char *msg = lua_tostring(L, -1);
+            TerminalPutString("execute error: ");
+            TerminalPutString(msg);
+            TerminalPutString("\n");
+                // lua_writestringerror("execute error: %s\n", msg);
+        }
+    }
+
+    lua_pop(L, 1);
+    luaL_buffinit(L, &buf);
+    TerminalPutString("succesfully executed cluaboot\r\n");
+    TerminalPutString(PROMPT);
+
+    for( int fp = 0; fp < 32768; fp++)
+    {
+        file[fp] = '\0';
     }
 }
 

@@ -492,7 +492,6 @@ static int l_loadfilesd(lua_State* L)
     return 0;
 }
 
-
 void RegisterCommands(lua_State* L)
 {
     lua_register(L, "reset", l_reset);

@@ -13,6 +13,8 @@ uint8_t keyboardConected = 0;
 uint8_t keyboardShift = 0;
 uint8_t keyboardCtrl = 0;
 
+uint32_t keyboardT = 0;
+
 uint8_t KeycodesPressed[KEYCOUNT];
 uint8_t KeycodesHold[KEYCOUNT];
 uint8_t KeycodesReleased[KEYCOUNT];
@@ -24,6 +26,8 @@ uint8_t MouseBReleased[MBCOUNT];
 int8_t MouseXSpeed = 0;
 int8_t MouseYSpeed = 0;
 int8_t MouseSSpeed = 0;
+
+uint32_t mouseT = 0;
 
 //extern void cdc_app_task(void);
 
@@ -64,6 +68,11 @@ void ReadInputs()
             KeycodesReleased[key] = 0;
             KeycodesHold[key] = 0;
         }
+    }
+
+    if (to_ms_since_boot(get_absolute_time()) > mouseT + 16)
+    {
+        MouseSetMovement(0,0,0);
     }
 
     tuh_task(); 
@@ -179,6 +188,7 @@ void MouseSetMovement(int8_t x, int8_t y, int8_t wheel)
     MouseXSpeed = x;
     MouseYSpeed = y;
     MouseSSpeed = wheel;
+    mouseT = to_ms_since_boot(get_absolute_time());
 }
 
 void MouseSetButtons(uint8_t lb, uint8_t mb, uint8_t rb, uint8_t plb, uint8_t pmb, uint8_t prb)

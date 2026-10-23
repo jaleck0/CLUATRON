@@ -449,11 +449,11 @@ static int l_loadfilesd(lua_State* L)
     const TCHAR* filename = lua_tostring(L, 1);
     lua_pop(L, 1);
     
-    
+    //open file for reading
     fr = f_open(&fil, filename, FA_READ);
-    if (fr != FR_OK) {
+    if (fr != FR_OK) 
+    {
         TerminalPutString("ERROR: could not open file \r\n");
-        //while (true);
     }
     else
     {
@@ -469,7 +469,7 @@ static int l_loadfilesd(lua_State* L)
         file[fp] = '\0';
     }
 
-    while (f_read(&fil, file, 32768, &ret))//(c = f_gets(file, 32768, &fil)) 
+    while (f_read(&fil, file, 32768, &ret))
     {
         TerminalPutString("ERROR: could not find file\r\n");
         break;
@@ -477,18 +477,51 @@ static int l_loadfilesd(lua_State* L)
 
     // Close file
     fr = f_close(&fil);
-    if (fr != FR_OK) 
-    {
-        //TerminalPutString("ERROR: could not close file \r\n");
-        //while (true);
-    } 
-    else 
+    if (fr == FR_OK) 
     {
         TerminalPutString("succesfully loaded ");
         TerminalPutString(filename);
         TerminalPutString(" into the text editor\r\n");
     }
     
+    return 0;
+}
+
+static int l_savefilesd(lua_State* L)
+{
+    const TCHAR* filename = lua_tostring(L, 1);
+    lua_pop(L, 1);
+
+    // Open file for writing ()
+    fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+    
+    if (fr != FR_OK) 
+    {
+        TerminalPutString("ERROR: could not find file\r\n");
+    }
+    else
+    {
+        TerminalPutString("saving ");
+        TerminalPutString(filename);
+        TerminalPutString("\r\n");
+    }
+
+    // Write something to file
+    
+    while(f_write(&fil, file, 32768, &ret))
+    {
+        TerminalPutString("ERROR: Could not write to file\r\n");
+        break;
+    }
+
+    // Close file
+    fr = f_close(&fil);
+
+    if (fr != FR_OK) 
+    {
+        printf("ERROR: Could not close file\r\n");
+    }
+
     return 0;
 }
 
@@ -533,4 +566,5 @@ void RegisterCommands(lua_State* L)
     lua_register(L, "uartsend", l_sendtextuart);
 
     lua_register(L, "load", l_loadfilesd);
+    lua_register(L, "save", l_savefilesd);
 }

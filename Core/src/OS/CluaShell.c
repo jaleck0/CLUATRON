@@ -14,12 +14,12 @@ char commandHistory[10][78] = {"", "", "", "", "", "", "", "", "", ""};
 int32_t commandWriteIndex = 0;
 int32_t commandSelectIndex = 0;
 
-char *startCommand = "function start() read_input() if keyh(41) == 1 then error(\"stopped\",2) end end debug.sethook(start,\"l\")";
+char *startCommand = "pi = math.pi function start() read_input() if keyh(41) == 1 then error(\"stopped\",2) end end debug.sethook(start,\"l\")";
 
 void InitShell()
 {
 
-    TerminalPutString("                  ---CLUATRON OS 0.2 ~ Jalecko 2024 - 2025---\n");
+    TerminalPutString("                  ---CLUATRON OS 0.3 ~ Jalecko 2024 - 2026---\n");
     TerminalPutString("\n ctrl-e  execute file\n ctrl-l  clear screen\n enter   execute command\n esc     stop program\n\n ");
 
     L = luaL_newstate();
@@ -27,6 +27,7 @@ void InitShell()
     luaL_buffinit(L, &buf);
     RegisterCommands(L);
 
+    //run 
     luaL_addlstring(&buf, startCommand, strlen(startCommand));
     luaL_pushresult(&buf);
     const char *start = lua_tolstring(L, -1, &len);
@@ -38,7 +39,6 @@ void InitShell()
     if (!sd_init_driver()) 
     {
         TerminalPutString("ERROR: could not initialize sd-card\r\n ");
-        //while (true);
     }
 
     // Mount drive
@@ -48,7 +48,6 @@ void InitShell()
         TerminalPutString("ERROR: could not find SD-card \r\n");
         TerminalPutString(PROMPT);
         return;
-        //while (true);
     }
     else
     {
@@ -56,14 +55,12 @@ void InitShell()
     }
     
     //load bootfile
-
     const TCHAR* filename = "cluaboot";    
     
     fr = f_open(&fil, filename, FA_READ);
     if (fr != FR_OK) {
         TerminalPutString("ERROR: could not find cluaboot \r\n ");
         return;
-        //while (true);
     }
     else
     {
@@ -74,7 +71,7 @@ void InitShell()
 
     TCHAR* c;
 
-    while (f_read(&fil, file, 32768, &ret))//(c = f_gets(file, 32768, &fil)) 
+    while (f_read(&fil, file, 32768, &ret)) 
     {
         TerminalPutString("ERROR: could not open cluaboot\r\n");
         break;
@@ -82,16 +79,7 @@ void InitShell()
 
     // Close file
     fr = f_close(&fil);
-    /*if (fr != FR_OK) 
-    {
-        //TerminalPutString("ERROR: could not close file \r\n");
-        //while (true);
-    } 
-    else 
-    {
-        
-    }*/
-
+    
     buf.b = file;
     buf.n = strlen(file);
     luaL_pushresult(&buf);
@@ -117,7 +105,6 @@ void InitShell()
             TerminalPutString("execute error: ");
             TerminalPutString(msg);
             TerminalPutString("\n");
-                // lua_writestringerror("execute error: %s\n", msg);
         }
     }
 
@@ -299,7 +286,6 @@ void RunShell()
                 TerminalPutString("execute error: ");
                 TerminalPutString(msg);
                 TerminalPutString("\n");
-                // lua_writestringerror("execute error: %s\n", msg);
             }
         }
 

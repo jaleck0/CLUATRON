@@ -55,7 +55,7 @@ void InitShell()
     }
     
     //load bootfile
-    const TCHAR* filename = "cluaboot";    
+    const TCHAR* filename = "cluaboot";
     
     fr = f_open(&fil, filename, FA_READ);
     if (fr != FR_OK) {

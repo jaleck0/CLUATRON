@@ -30,6 +30,8 @@ uint32_t commandPos;
 
 char file[32768];
 uint32_t filePos;
+uint32_t currentLine;
+uint32_t currentHPos;
 
 lua_State *L;
 luaL_Buffer buf;
